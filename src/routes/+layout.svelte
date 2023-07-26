@@ -5,13 +5,12 @@
 	import { hiddenDrawer } from '$lib/stores.js';
 </script>
 
-<div class="container mx-auto p-4 h-screen relative">
+<div class="container mx-auto p-4 relative pb-20">
 	<slot />
-	<div class="absolute bottom-10 w-full pr-4">
-		<button
-			on:click={() => ($hiddenDrawer = false)}
-			class="btn btn-primary w-full">MENU</button
-		>
-	</div>
 	<Drawer />
 </div>
+
+<button
+			on:click={() => ($hiddenDrawer = false)}
+			class="fixed bottom-0 btn btn-primary h-14 w-full rounded-b-none">MENU</button
+		>
