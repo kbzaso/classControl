@@ -24,7 +24,7 @@
 	</div>
 </button>
 {#if checked}
-<ul class=" space-y-2 border-x border-b border-blue-900 rounded-b-xl p-4" in:fly={{ y: 10 }}>
+<ul class=" space-y-4 border-x border-b border-blue-900 rounded-b-xl p-4" in:fly={{ y: 10 }}>
 	{#key checked}
 			<li class="flex gap-2 items-center">
                 <img class="rounded-full h-10 w-10 object-cover" src="https://images.unsplash.com/photo-1639149888905-fb39731f2e6c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=928&q=80" alt="">
@@ -38,6 +38,9 @@
                 <img class="rounded-full h-10 w-10 object-cover" src="https://images.unsplash.com/photo-1639149888905-fb39731f2e6c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=928&q=80" alt="">
                 <p>Alejandro Sáez</p>
             </li>
+			<button class="btn bg-yellow-300 text-black w-full ">
+				Asistir
+			</button>
             {/key}
     </ul>
 {/if}
