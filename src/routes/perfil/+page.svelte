@@ -31,7 +31,7 @@
 			>
 			<label for="foto" class="text-gray-600">
 				Fotografía
-				<input type="file" id="foto" name="foto" class="mt-1 file-input file-input-bordered file-input-primary w-full max-w-xs" />
+				<input type="file" id="foto" name="foto" class="mt-1 file-input file-input-bordered file-input-primary w-full" />
 			</label>
 			<label for="plan" class="text-gray-600 flex flex-col gap-1">
 				Plan
