@@ -24,11 +24,21 @@
 			<li>
 				<a
 					on:click={() => ($hiddenDrawer = true)}
+					href="/agregar-nuevo-alumno"
+					class="h-11 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+				>
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#595f6e" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+					<span class="flex-1 ml-3 whitespace-nowrap">Agrega nuevo alumno/a</span>
+				</a>
+			</li>
+			<li>
+				<a
+					on:click={() => ($hiddenDrawer = true)}
 					href="/agregar-clase"
 					class="h-11 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
 				>
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#595f6e" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
-					<span class="flex-1 ml-3 whitespace-nowrap">Agrega clases</span>
+					<span class="flex-1 ml-3 whitespace-nowrap">Agrega nueva clases</span>
 				</a>
 			</li>
 			<li>

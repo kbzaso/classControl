@@ -27,11 +27,9 @@
 		$hiddenDrawer = true;
 		goto('/');
 	};
-
-	console.log(session);
 </script>
 
-<div class="container mx-auto p-4 relative pb-20">
+<div class="p-4 container pb-20 min-h-screen  grid">
 	<slot />
 	<Drawer on:click={handleSignOut} />
 </div>

@@ -17,9 +17,9 @@
       }
     </script>
 
-<main class="w-full mb-10">
-	<div>
-		<img class="mx-auto my-4" src="/logo.png" alt="Logotipo de la Bóveda Secreta" />
+<main class="self-center">
+
+		<img class="mx-auto mb-8" src="/logo.png" alt="Logotipo de la Bóveda Secreta" />
 		<form on:submit="{handleSignIn}" class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl">
 			<label for="email" class="text-gray-600">
 				Nombre
@@ -44,5 +44,5 @@
 			>
 			<button class="btn bg-yellow-300 text-black" type="submit">Ingresar</button>
 		</form>
-	</div>
+
 </main>
