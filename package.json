@@ -36,6 +36,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@prisma/client": "^5.0.0",
 		"@popperjs/core": "^2.11.8",
 		"@supabase/auth-helpers-sveltekit": "^0.10.1",
 		"@supabase/supabase-js": "^2.29.0",
