@@ -44,11 +44,11 @@
 			<li>
 				<a
 					on:click={() => ($hiddenDrawer = true)}
-					href="/"
+					href="/horarios"
 					class="h-11 flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
 				>
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#595f6e" d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"/></svg>
-					<span class="flex-1 ml-3 whitespace-nowrap">Clases</span>
+					<span class="flex-1 ml-3 whitespace-nowrap">Horarios</span>
 				</a>
 			</li>
 			<li>
@@ -63,7 +63,7 @@
 			</li>
 			<li>
 				<button
-					on:click
+					on:click={() => ($hiddenDrawer = true)}
 					class="h-11 w-full text-left flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
 				>
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#595f6e" d="m17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>

@@ -6,27 +6,6 @@
 	export let data;
 	export let form;
 
-	let { supabase, session, profile } = data;
-	$: ({ supabase, session, profile } = data);
-
-	let profileForm: HTMLFormElement;
-	let fullName: string = profile?.full_name ?? '';
-	let plan: string = profile?.plan ?? '';
-	let username: string = profile?.username ?? '';
-	let website: string = profile?.website ?? '';
-	let avatarUrl: string = profile?.avatar_url ?? '';
-
-
-	onMount(() => {
-		const miSelectElement = document.getElementById('plan');
-		console.log(miSelectElement)
-		for (const option of miSelectElement.options) {
-			if (option.value === profile?.plan) {
-				option.selected = true; // Establecemos el atributo 'selected' para marcarla como seleccionada
-				break; // Una vez encontrada la opción, salimos del bucle
-			}
-		}
-	});
 </script>
 
 <main class="w-full mb-10">
@@ -43,8 +22,6 @@
 		<form
 			action="?/update"
 			method="POST"
-			use:enhance={handleSubmit}
-			bind:this={profileForm}
 			class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl"
 		>
 			<label for="name" class="text-gray-600">
@@ -55,7 +32,6 @@
 					id="name"
 					name="name"
 					class="input input-bordered input-primary w-full mt-1"
-					value={form?.fullName ?? fullName}
 				/></label
 			>
 			<label for="email" class="text-gray-600">
@@ -66,7 +42,6 @@
 					type="text"
 					name="email"
 					class="input input-bordered input-primary w-full mt-1"
-					value={session?.user.email}
 				/></label
 			>
 			<label for="foto" class="text-gray-600">
