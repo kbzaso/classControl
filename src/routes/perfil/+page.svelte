@@ -1,11 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
-
-	export let data;
-	export let form;
-
+	import type { PageData } from './$types';
+	export let data: PageData;
 </script>
 
 <main class="w-full mb-10">
@@ -31,16 +27,17 @@
 					type="text"
 					id="name"
 					name="name"
+					value={data?.name}
 					class="input input-bordered input-primary w-full mt-1"
 				/></label
 			>
 			<label for="email" class="text-gray-600">
-				Email
+				Usuario
 				<input
 					required
-
 					type="text"
 					name="email"
+					value={data?.username}
 					class="input input-bordered input-primary w-full mt-1"
 				/></label
 			>

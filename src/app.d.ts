@@ -1,15 +1,19 @@
-import { SupabaseClient, Session } from '@supabase/supabase-js'
-
+/// <reference types="lucia" />
 declare global {
   namespace App {
-    interface Locals {
-      supabase: SupabaseClient
-      getSession(): Promise<Session | null>
-    }
-    interface PageData {
-      session: Session | null
-    }
-    // interface Error {}
-    // interface Platform {}
-  }
+		interface Locals {
+			auth: import("lucia").AuthRequest;
+		}
+	}
+	namespace Lucia {
+		type Auth = import("$lib/server/lucia").Auth;
+		type DatabaseUserAttributes = {
+			username: string;
+			name: string;
+		};
+		type DatabaseSessionAttributes = {};
+	}
 }
+
+// THIS IS IMPORTANT!!!
+export {};
