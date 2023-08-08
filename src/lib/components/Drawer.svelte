@@ -78,9 +78,6 @@
 				</a>
 			</li>
 			<li>
-				<!-- <form method="POST" action="/logout" use:enhance>
-					<input type="submit" value="Sign out" />
-				</form> -->
 				<button
 					on:click={logout}
 					class="h-11 w-full text-left flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"

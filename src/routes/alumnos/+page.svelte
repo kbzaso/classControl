@@ -1,21 +1,30 @@
-<script>
-	import { goto } from '$app/navigation';
-
-	export let data;
+<script lang="ts">
+	import { enhance } from '$app/forms';
+	import type { PageData } from './$types';
+	export let data: PageData;
+	$: ({ users, session } = data);
 </script>
 
 <section class="">
 	<img class="mx-auto mb-8" src="/logo.png" alt="Logotipo de la Bóveda Secreta" />
 	<h1>Lista de alumnos</h1>
 	<ul class=" space-y-4 p-4">
+		{#each users as user}
 			<li class="flex gap-2 items-center">
 				<img
 					class="rounded-full h-10 w-10 object-cover"
 					src="https://images.unsplash.com/photo-1639149888905-fb39731f2e6c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=928&q=80"
 					alt=""
 				/>
-				<p>Alejandro Sáez</p>
+				<p>{user.first_name} {user.last_name}</p>
+				{#if user.id !== session.user.userId}
+					<form method="POST" use:enhance>
+						<input type="hidden" name="id" value={user.id} />
+						<button class="btn btn-warning" type="submit">Delete</button>
+					</form>
+				{/if}
 			</li>
+		{/each}
 	</ul>
 </section>
 

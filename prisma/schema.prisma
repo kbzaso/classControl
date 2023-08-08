@@ -15,7 +15,7 @@ model User {
   last_name    String
   email        String    @unique
   role         Role      @default(USER)
-  plan         Plan
+  plan         Plan?
   auth_session Session[]
   auth_key     Key[]
 }

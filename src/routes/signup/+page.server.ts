@@ -40,7 +40,7 @@ export const actions: Actions = {
 			});
 		}
 		try {
-			const user = await auth.createUser({
+			await auth.createUser({
 				key: {
 					providerId: "username", // auth method
 					providerUserId: email.toLowerCase(), // unique id when using "username" auth method
@@ -53,12 +53,6 @@ export const actions: Actions = {
 					plan
 				}
 			});
-			const session = await auth.createSession({
-				userId: user.userId,
-				attributes: {
-				}
-			});
-			locals.auth.setSession(session); // set session cookie
 		} catch (e) {
 			// this part depends on the database you're using
 			// check for unique constraint error in user table
@@ -76,6 +70,10 @@ export const actions: Actions = {
 		}
 		// redirect to
 		// make sure you don't throw inside a try/catch block!
-		throw redirect(302, "/horarios");
+		// throw redirect(302, "/horarios");
+		return new Response(JSON.stringify({ success: true }), 
+			{ status: 200, 
+				headers: { "content-type": "application/json" } }
+		);
 	}
 };

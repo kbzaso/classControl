@@ -4,7 +4,7 @@ import { dev } from "$app/environment";
 import { prisma } from "@lucia-auth/adapter-prisma";
 import { PrismaClient } from "@prisma/client";
 
-const client = new PrismaClient();
+export const client = new PrismaClient();
 
 // expect error
 export const auth = lucia({

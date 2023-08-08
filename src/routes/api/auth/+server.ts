@@ -6,5 +6,11 @@ export async function POST({ locals }) {
     if (!session) return new Response(null, { status: 401 });
     await auth.invalidateSession(session.sessionId); // invalidate session
     locals.auth.setSession(null); // remove cookie
-    return new Response(null, { status: 200 });
+    const options = {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json', 
+        } 
+    }
+    return new Response(JSON.stringify({ success: true }), options);
 }
