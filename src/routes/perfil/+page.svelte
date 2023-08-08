@@ -2,6 +2,8 @@
 	import { enhance } from '$app/forms';
 	import type { PageData } from './$types';
 	export let data: PageData;
+
+	console.log(data);
 </script>
 
 <main class="w-full mb-10">
@@ -27,17 +29,17 @@
 					type="text"
 					id="name"
 					name="name"
-					value={data?.name}
+					value={data?.first_name}
 					class="input input-bordered input-primary w-full mt-1"
 				/></label
 			>
 			<label for="email" class="text-gray-600">
-				Usuario
+				Email
 				<input
 					required
 					type="text"
 					name="email"
-					value={data?.username}
+					value={data?.email}
 					class="input input-bordered input-primary w-full mt-1"
 				/></label
 			>

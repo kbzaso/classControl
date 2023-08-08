@@ -1,23 +1,27 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
-
 model User {
-  id           String    @id @unique
-  name         String?
-  username     String    @unique
+  id           String    @id @unique @default(uuid())
+  createdAt    DateTime  @default(now())
+  first_name   String
+  last_name    String
+  email        String    @unique
+  role         Role      @default(USER)
+  plan         Plan
   auth_session Session[]
   auth_key     Key[]
 }
 
 model Session {
-  id             String @id @unique
+  id             String @id @unique @default(uuid())
   user_id        String
   active_expires BigInt
   idle_expires   BigInt
@@ -27,10 +31,22 @@ model Session {
 }
 
 model Key {
-  id              String  @id @unique
+  id              String  @id @unique @default(uuid())
   hashed_password String?
   user_id         String
   user            User    @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
   @@index([user_id])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Plan {
+  FOUR
+  EIGHT
+  TWELVE
+  SIXTEEN
 }

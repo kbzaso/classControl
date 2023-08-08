@@ -5,24 +5,24 @@ import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
 export const actions: Actions = {
-	default: async ({ request, locals }) => {
+	login: async ({ request, locals }) => {
 		const formData = await request.formData();
-		const username = formData.get("username");
+		const email = formData.get("email");
 		const password = formData.get("password");
 		// basic check
 		if (
-			typeof username !== "string" ||
-			username.length < 1 ||
-			username.length > 31
+			typeof email !== "string" ||
+			email.length < 1 ||
+			email.length > 24
 		) {
 			return fail(400, {
-				message: "Invalid username"
+				message: "Invalid email"
 			});
 		}
 		if (
 			typeof password !== "string" ||
 			password.length < 1 ||
-			password.length > 255
+			password.length > 24
 		) {
 			return fail(400, {
 				message: "Invalid password"
@@ -33,7 +33,7 @@ export const actions: Actions = {
 			// and validate password
 			const user = await auth.useKey(
 				"username",
-				username.toLowerCase(),
+				email.toLowerCase(),
 				password
 			);
 			const session = await auth.createSession({
@@ -60,5 +60,5 @@ export const actions: Actions = {
 		// redirect to
 		// make sure you don't throw inside a try/catch block!
 		throw redirect(302, "/horarios");
-	}
+	},
 };

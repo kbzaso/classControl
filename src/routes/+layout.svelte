@@ -4,9 +4,6 @@
 
 	import { hiddenDrawer } from '$lib/stores.js';
 
-	import { goto, invalidate } from '$app/navigation';
-	import { onMount } from 'svelte';
-
 	export let data;
 
 </script>
@@ -15,8 +12,9 @@
 	<slot />
 	<Drawer  />
 </div>
-
+	{#if data.first_name}
 	<button
 		on:click={() => ($hiddenDrawer = false)}
 		class="fixed bottom-0 btn btn-primary h-14 w-full rounded-b-none">MENU</button
 	>
+	{/if}

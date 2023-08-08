@@ -4,6 +4,7 @@ import { fail, redirect } from "@sveltejs/kit";
 import { LuciaError } from "lucia";
 
 import type { PageServerLoad, Actions } from "./$types";
+import type { Plan } from "@prisma/client";
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -14,13 +15,16 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const formData = await request.formData();
-		const username = formData.get("username");
+		const first_name = formData.get("first_name");
+		const last_name = formData.get("last_name");
+		const plan = formData.get("plan");
+		const email = formData.get("email");
 		const password = formData.get("password");
 		// basic check
 		if (
-			typeof username !== "string" ||
-			username.length < 4 ||
-			username.length > 31
+			typeof email !== "string" ||
+			email.length < 4 ||
+			email.length > 31
 		) {
 			return fail(400, {
 				message: "Invalid username"
@@ -39,17 +43,20 @@ export const actions: Actions = {
 			const user = await auth.createUser({
 				key: {
 					providerId: "username", // auth method
-					providerUserId: username.toLowerCase(), // unique id when using "username" auth method
+					providerUserId: email.toLowerCase(), // unique id when using "username" auth method
 					password // hashed by Lucia
 				},
 				attributes: {
-					username
+					email,
+					first_name,
+					last_name,
+					plan
 				}
 			});
-			console.log(user);
 			const session = await auth.createSession({
 				userId: user.userId,
-				attributes: {}
+				attributes: {
+				}
 			});
 			locals.auth.setSession(session); // set session cookie
 		} catch (e) {
@@ -62,6 +69,7 @@ export const actions: Actions = {
 					message: "Username already taken"
 				});
 			}
+			console.log(e)
 			return fail(500, {
 				message: "Ocurrio un error inesperado"
 			});
