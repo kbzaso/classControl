@@ -1,10 +1,9 @@
 import { auth } from "$lib/server/lucia";
-import { fail, redirect } from "@sveltejs/kit";
-
+import { fail, json, redirect } from "@sveltejs/kit";
+import { superValidate } from "sveltekit-superforms/server";
 import { LuciaError } from "lucia";
 
 import type { PageServerLoad, Actions } from "./$types";
-import type { Plan } from "@prisma/client";
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -63,17 +62,12 @@ export const actions: Actions = {
 					message: "Username already taken"
 				});
 			}
-			console.log(e)
 			return fail(500, {
 				message: "Ocurrio un error inesperado"
 			});
 		}
 		// redirect to
 		// make sure you don't throw inside a try/catch block!
-		// throw redirect(302, "/horarios");
-		return new Response(JSON.stringify({ success: true }), 
-			{ status: 200, 
-				headers: { "content-type": "application/json" } }
-		);
+		throw redirect(302, "/horarios");
 	}
 };
