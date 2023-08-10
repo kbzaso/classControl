@@ -10,7 +10,11 @@ declare global {
 		type DatabaseUserAttributes = {
 			email: string;
 			first_name: string;
+			last_name: string;
+			role: string;
+			userId: string;
 			plan: Plan;
+			level: string;
 		};
 		type DatabaseSessionAttributes = {};
 	}

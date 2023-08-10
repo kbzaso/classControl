@@ -12,7 +12,8 @@ const addUserSchema = z.object({
 	last_name: z.string().min(6),
 	email: z.string().email(),
 	password: z.string().min(6).max(24),
-	plan: z.string()
+	plan: z.string().min(1),
+	level: z.string().min(1)
 });
 
 const deleteUserSchema = z.object({
@@ -24,7 +25,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
 	if (!session) throw redirect(302, "/");
 
-
 	const ADD_USER_FORM = superValidate(addUserSchema);
 	const DELETE_USER_FORM = superValidate(deleteUserSchema);
 
@@ -34,7 +34,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 			first_name: true,
 			last_name: true,
 			email: true,
-			role: true
+			level: true,
+		},
+		where: {
+			role: {
+				equals: "USER"
+			}
 		}
 	});
 	
@@ -65,7 +70,10 @@ export const actions: Actions = {
 		const last_name = form.data.last_name;
 		const email = form.data.email;
 		const password = form.data.password;
+		const level = form.data.level;
 		const plan = form.data.plan;
+
+		console.l
 
 		try {
 			await auth.createUser({
@@ -78,7 +86,8 @@ export const actions: Actions = {
 					first_name,
 					last_name,
 					email,
-					plan
+					plan,
+					level
 				}
 			});
 		} catch (e) {

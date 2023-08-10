@@ -15,7 +15,8 @@ model User {
   last_name    String
   email        String    @unique
   role         Role      @default(USER)
-  plan         Plan?
+  plan         Plan      @default(FOUR)
+  level        Level     @default(BASIC)
   auth_session Session[]
   auth_key     Key[]
 }
@@ -49,4 +50,11 @@ enum Plan {
   EIGHT
   TWELVE
   SIXTEEN
+}
+
+enum Level {
+  BASIC
+  INTERMEDIATE
+  ADVANCED
+  MASTER
 }
