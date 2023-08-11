@@ -7,7 +7,6 @@
 
 <main class="w-full mb-10">
 	<div>
-		<img class="mx-auto my-4" src="/logo.png" alt="Logotipo de la Bóveda Secreta" />
 		<div class="w-full flex flex-col items-center gap-4">
 			<img
 				class="rounded-full h-40 w-40 object-cover"

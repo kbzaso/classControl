@@ -1,13 +1,22 @@
 -- CreateEnum
 CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
 
+-- CreateEnum
+CREATE TYPE "Plan" AS ENUM ('FOUR', 'EIGHT', 'TWELVE', 'SIXTEEN');
+
+-- CreateEnum
+CREATE TYPE "Level" AS ENUM ('BASIC', 'INTERMEDIATE', 'ADVANCED', 'MASTER');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'USER',
+    "plan" "Plan" NOT NULL DEFAULT 'FOUR',
+    "level" "Level" NOT NULL DEFAULT 'BASIC',
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

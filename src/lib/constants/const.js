@@ -8,3 +8,10 @@ export const LEVEL = {
     INTERMEDIATE: 'Intermedio',
     ADVANCED: 'Avanzado'
 }
+
+export const PLAN = {
+    FOUR: '4 clases al mes',
+    EIGHT: '8 clases al mes',
+    TWELVE: '12 clases al mes',
+    SIXTEEN: '16 clases al mes'
+}

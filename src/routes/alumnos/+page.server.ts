@@ -16,17 +16,13 @@ const addUserSchema = z.object({
 	level: z.string().min(1)
 });
 
-const deleteUserSchema = z.object({
-	id: z.string().min(1)
-});
 
 export const load: PageServerLoad = async ({ locals }) => {
 
 	const session = await locals.auth.validate();
 	if (!session) throw redirect(302, "/");
 
-	const ADD_USER_FORM = superValidate(addUserSchema);
-	const DELETE_USER_FORM = superValidate(deleteUserSchema);
+	const form = superValidate(addUserSchema);
 
 	const users = await client.user.findMany({
 		select: {
@@ -46,24 +42,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 	return {
 		users,
 		session,
-		ADD_USER_FORM,
-		DELETE_USER_FORM
+		form,
 	};
 };
 
 export const actions: Actions = {
-
-	delete: async ({ request }) => {
-		const formData = await request.formData();
-		const id = formData.get('id');
-		await client.user.delete({
-			where: {
-				id: String(id)
-			}
-		});
-	},
-
-	addUser: async ( event ) => {
+	default: async ( event ) => {
 		const form = await superValidate(event, addUserSchema);
 
 		const first_name = form.data.first_name;
@@ -72,8 +56,6 @@ export const actions: Actions = {
 		const password = form.data.password;
 		const level = form.data.level;
 		const plan = form.data.plan;
-
-		console.l
 
 		try {
 			await auth.createUser({

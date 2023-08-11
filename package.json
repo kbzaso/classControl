@@ -41,7 +41,6 @@
 		"@lucia-auth/adapter-prisma": "^3.0.0",
 		"@popperjs/core": "^2.11.8",
 		"@prisma/client": "^5.1.1",
-		"@supabase/auth-helpers-sveltekit": "^0.10.1",
 		"@supabase/supabase-js": "^2.29.0",
 		"flowbite": "^1.7.0",
 		"flowbite-svelte": "^0.40.2",

@@ -3,52 +3,37 @@
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import FormAlert from '$lib/components/FormAlert.svelte';
 
+	import { LEVEL, PLAN } from '$lib/constants/const.js';
+
 	import type { PageData } from './$types';
 	import Badge from '$lib/components/Badge.svelte';
+
 	export let data: PageData;
 	$: ({ users, session } = data);
 
-	const { form, errors, enhance, message, delayed } = superForm(data.ADD_USER_FORM, {
+	const { form, errors, enhance, message, delayed } = superForm(data.form, {
 		validators: {
 			first_name: (first_name) => (first_name.length <= 1 ? 'Ingresa un nombre' : null),
 			last_name: (first_name) => (first_name.length <= 1 ? 'Ingresa un apellido' : null),
 			email: (email) => (email.length <= 6 ? 'Ingresa un correo valido' : null),
-			plan: (plan) => (plan.length <= 6 ? 'Selecciona una opción' : null),
-			level: (level) => (level.length <= 6 ? 'Selecciona una opción' : null),
+			plan: (plan) => (plan.length <= 1 ? 'Selecciona una opción' : null),
+			level: (level) => (level.length <= 1 ? 'Selecciona una opción' : null),
 			password: (password) =>
 				password.length < 6 ? 'Contraseña debe superar los 6 caracteres' : null
 		}
 	});
-
-	const {
-		form: DELETE_USER_FORM,
-		errors: DELETE_USER_ERROR,
-		enhance: DELETE_USER_ENHANCE,
-		message: DELETE_USER_MESSAGE,
-		delayed: DELETE_USER_DELAYED,
-		formId
-	} = superForm(data.DELETE_USER_FORM, {});
 </script>
 
 <section class="">
-	<img class="mx-auto mb-8" src="/logo.png" alt="Logotipo de la Bóveda Secreta" />
 	<h1 class="text-xl uppercase tracking-widest text-yellow-300 mb-4">Lista de alumnos</h1>
-
-	<!-- {#if user.id !== session.user.userId && session.user.role === 'ADMIN'}
-						<form method="POST" action="?/delete" use:DELETE_USER_ENHANCE>
-							<input type="hidden" name="__superform_id" bind:value={$formId} />
-							<input type="hidden" name="id" value={user.id} />
-							<button class="btn btn-error btn-circle" type="submit"> X </button>
-						</form>
-					{/if} -->
 
 	<div class="overflow-x-auto border rounded-xl border-blue-900">
 		<table class="table">
 			<!-- head -->
 			<thead class="bg-blue-900 text-white">
 				<tr>
-					<th>Nombre</th>
-					<th>Nivel</th>
+					<th>Alumno</th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -60,11 +45,11 @@
 								{user.first_name}
 								{user.last_name}
 							</span>
-								<Badge text={user.level} />
+								<Badge text={LEVEL[user?.level]} size={'badge-md'} />
 						</td>
 
 						<td>
-							<a href={`/alumnos/${user.id}`} class="btn btn-sm btn-outline btn-warning">Ver</a>
+							<a href={`/alumnos/${user.id}`} class="btn btn-outline w-full btn-warning">Ver</a>
 						</td>
 					</tr>
 				{/each}
@@ -84,11 +69,6 @@
 	</button>
 {/if}
 
-{#if $DELETE_USER_DELAYED}
-	<div class="btn bg-white/10 rounded-full w-16 h-16 absolute bottom-20 left-6">
-		<span class="loading loading-spinner" />
-	</div>
-{/if}
 
 <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
 	<form method="dialog" class="modal-box">
@@ -96,7 +76,6 @@
 		<form
 			method="post"
 			use:enhance
-			action="?/addUser"
 			class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl"
 		>
 			<SuperDebug data={$form} />

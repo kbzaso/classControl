@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
@@ -16,7 +16,7 @@ model User {
   email        String    @unique
   role         Role      @default(USER)
   plan         Plan      @default(FOUR)
-  level        Level     @default(BASIC)
+  level        Level?     @default(BASIC)
   auth_session Session[]
   auth_key     Key[]
 }
