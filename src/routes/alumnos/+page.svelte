@@ -3,8 +3,6 @@
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import FormAlert from '$lib/components/FormAlert.svelte';
 
-	import { LEVEL, PLAN } from '$lib/constants/const.js';
-
 	import type { PageData } from './$types';
 	import Badge from '$lib/components/Badge.svelte';
 
@@ -22,6 +20,7 @@
 				password.length < 6 ? 'Contraseña debe superar los 6 caracteres' : null
 		}
 	});
+
 </script>
 
 <section class="">
@@ -45,7 +44,7 @@
 								{user.first_name}
 								{user.last_name}
 							</span>
-								<Badge text={LEVEL[user?.level]} size={'badge-md'} />
+								<Badge level={user?.level} size={'badge-md'} />
 						</td>
 
 						<td>
@@ -58,7 +57,7 @@
 	</div>
 </section>
 
-{#if session.user.role === 'ADMIN'}
+
 	<button
 		class="btn bg-white/10 rounded-full w-16 h-16 absolute bottom-20 right-6"
 		onclick="my_modal_5.showModal()"
@@ -67,7 +66,6 @@
 			><path fill="#f9e710" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" /></svg
 		>
 	</button>
-{/if}
 
 
 <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">

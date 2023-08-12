@@ -5,10 +5,9 @@
 	import { hiddenDrawer } from '$lib/stores.js';
 
 	export let data;
-	console.log(data.userId);
 </script>
 
-<div class="p-4 container min-h-screen h-full flex flex-col">
+<div class="p-4 container min-h-screen h-full flex flex-col mx-auto">
 		<img class="mx-auto my-4" src="/logo.png" alt="Logotipo de la Bóveda Secreta" />
 		<slot />
 	<Drawer />

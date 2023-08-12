@@ -4,11 +4,18 @@ import { superValidate } from "sveltekit-superforms/server";
 import { LuciaError } from "lucia";
 
 import type { PageServerLoad, Actions } from "./$types";
+import { z } from 'zod';
+
+const loginSchema = z.object({
+	email: z.string().email(),
+	password: z.string().min(6).max(24)
+});
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
 	if (session) throw redirect(302, "/horarios");
-	return {};
+	const form = superValidate(loginSchema);
+	return { form };
 };
 
 export const actions: Actions = {
@@ -19,25 +26,7 @@ export const actions: Actions = {
 		const plan = formData.get("plan");
 		const email = formData.get("email");
 		const password = formData.get("password");
-		// basic check
-		if (
-			typeof email !== "string" ||
-			email.length < 4 ||
-			email.length > 31
-		) {
-			return fail(400, {
-				message: "Invalid username"
-			});
-		}
-		if (
-			typeof password !== "string" ||
-			password.length < 6 ||
-			password.length > 255
-		) {
-			return fail(400, {
-				message: "Invalid password"
-			});
-		}
+
 		try {
 			await auth.createUser({
 				key: {

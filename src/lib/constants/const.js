@@ -6,7 +6,9 @@ export const ROLE = {
 export const LEVEL = {
     BASIC: 'Básico',
     INTERMEDIATE: 'Intermedio',
-    ADVANCED: 'Avanzado'
+    ADVANCED: 'Avanzado',
+    MASTER: 'Maestro/a'
+
 }
 
 export const PLAN = {

@@ -17,7 +17,7 @@
 				{user?.first_name}
 				{user?.last_name}
 		</h1>
-		<Badge size={'badge-md'} text={LEVEL[user?.level]} />
+		<Badge size={'badge-md'} level={LEVEL[user?.level]} />
 		<ul class="my-4 space-y-2 text-lg">
 			<li class="flex flex-col">
 				<span class="uppercase tracking-widest text-yellow-300 text-left text-sm">Email:</span>

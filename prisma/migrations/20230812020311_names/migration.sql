@@ -1,11 +1,11 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN');
+CREATE TYPE "Role" AS ENUM ('ALUMNO', 'PROFESOR');
 
 -- CreateEnum
-CREATE TYPE "Plan" AS ENUM ('FOUR', 'EIGHT', 'TWELVE', 'SIXTEEN');
+CREATE TYPE "Plan" AS ENUM ('CUATRO', 'OCHO', 'DOSE', 'DIESISEIS');
 
 -- CreateEnum
-CREATE TYPE "Level" AS ENUM ('BASIC', 'INTERMEDIATE', 'ADVANCED', 'MASTER');
+CREATE TYPE "Level" AS ENUM ('BASICO', 'INTERMEDIO', 'AVANZADO');
 
 -- CreateTable
 CREATE TABLE "User" (
@@ -14,9 +14,9 @@ CREATE TABLE "User" (
     "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "role" "Role" NOT NULL DEFAULT 'USER',
-    "plan" "Plan" NOT NULL DEFAULT 'FOUR',
-    "level" "Level" NOT NULL DEFAULT 'BASIC',
+    "role" "Role" NOT NULL DEFAULT 'ALUMNO',
+    "plan" "Plan",
+    "level" "Level",
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

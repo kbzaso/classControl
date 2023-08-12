@@ -1,11 +1,21 @@
 <script lang="ts">
-	import { enhance } from "$app/forms";
+	import { superForm } from "sveltekit-superforms/client";
+	import SuperDebug from "sveltekit-superforms/client/SuperDebug.svelte";
+
+	export let data;
+
+	const { form, errors, enhance, delayed } = superForm(data.form, {
+		validators: {
+			email: (email) => (email.length <= 6 ? 'Ingresa un correo valido' : null),
+			password: (password) =>
+				password.length < 6 ? 'Contraseña debe superar los 6 caracteres' : null
+		}
+	});
 </script>
 
-<h1>Sign up</h1>
+<h1>Sign up sin login</h1>
+<!-- <SuperDebug data={$form}/> -->
 <main class="self-center">
-
-	<img class="mx-auto mb-8" src="/logo.png" alt="Logotipo de la Bóveda Secreta" />
 	<form method="post" use:enhance class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl">
 		<label for="first_name" class="text-gray-600">
 			Primer nombre
@@ -29,7 +39,7 @@
 		>
 		<label for="plan" class="text-gray-600 flex flex-col gap-1">
 			Plan
-			<select id="plan" class="select select-primary w-full" required name="plan">
+			<select id="plan" class="select select-primary w-full" name="plan">
 				<option value="FOUR">4 clases menusales</option>
 				<option value="EIGHT">8 clases mensuales</option>
 				<option value="TWELVE">12 clases mensuales</option>
@@ -44,6 +54,7 @@
 				id="email"
 				name="email"
 				class="input input-bordered input-primary w-full mt-1"
+				bind:value={$form.email}
 			/></label
 		>
 		<label for="password" class="text-gray-600">
@@ -54,6 +65,7 @@
 				name="password"
 				id="password"
 				class="input input-bordered input-primary w-full mt-1"
+				bind:value={$form.password}
 			/></label
 		>
 		<button class="btn btn-primary" type="submit">Ingresar</button>
