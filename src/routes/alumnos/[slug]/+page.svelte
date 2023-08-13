@@ -34,7 +34,7 @@
 				<p>6</p>
 			</li>
 			<li class="flex flex-col">
-				<span class="uppercase tracking-widest text-yellow-300 text-left text-sm">Tu plan termina: </span>
+				<span class="uppercase tracking-widest text-yellow-300 text-left text-sm">Su plan termina: </span>
 				<p>06/06/2023</p>
 			</li>
 		</ul>

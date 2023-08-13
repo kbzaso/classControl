@@ -8,13 +8,14 @@ import { LuciaError } from 'lucia';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 const updateSchema = z.object({
-	first_name: z.string().min(3),
-	last_name: z.string().min(3),
+	first_name: z.string(),
+	last_name: z.string(),
+	plan: z.string(),
 });
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, depends }) => {
 	const session = await locals.auth.validate();
-	const form = superValidate(updateSchema);
+	if (!session) throw redirect(302, '/');
 
 	// bring my user info from the database
 	const user = await client.user.findUnique({
@@ -22,8 +23,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 			id: session?.user?.userId
 		}
 	});
-
-	if (!session) throw redirect(302, '/');
+	
+	const form = superValidate(user, updateSchema);
+	
 	return {
 		user,
 		userId: session.user.userId,
@@ -38,6 +40,7 @@ export const actions: Actions = {
 
 		const first_name = form.data.first_name;
 		const last_name = form.data.last_name;
+		const plan = form.data.plan || 'FOUR';
 
 		if (!form.valid) {
 			return fail(400, {
@@ -52,7 +55,8 @@ export const actions: Actions = {
 				},
 				data: {
 					first_name,
-					last_name
+					last_name,
+					plan
 				}
 			});
 			return {

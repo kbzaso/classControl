@@ -14,12 +14,13 @@
 			first_name: (first_name) => (first_name.length <= 1 ? 'Ingresa un nombre' : null),
 			last_name: (first_name) => (first_name.length <= 1 ? 'Ingresa un apellido' : null),
 			email: (email) => (email.length <= 6 ? 'Ingresa un correo valido' : null),
-			plan: (plan) => (plan.length <= 1 ? 'Selecciona una opción' : null),
+			plan: (plan) => (plan.length <= 1 ? 'Selecciona un plan' : null),
 			level: (level) => (level.length <= 1 ? 'Selecciona una opción' : null),
 			password: (password) =>
 				password.length < 6 ? 'Contraseña debe superar los 6 caracteres' : null
 		}
 	});
+
 
 </script>
 
@@ -70,6 +71,7 @@
 
 <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
 	<form method="dialog" class="modal-box">
+		<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 		<h2 class="text-xl uppercase tracking-widest text-yellow-300 text-center">Agregar Alumno</h2>
 		<form
 			method="post"

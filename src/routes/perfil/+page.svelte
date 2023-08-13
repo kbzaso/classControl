@@ -8,13 +8,7 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 
-
-	const { form, errors, enhance, message, delayed } = superForm(data.form, {
-		validators: {
-			first_name: (first_name) => (first_name.length <= 1 ? 'Ingresa un nombre' : null),
-			last_name: (first_name) => (first_name.length <= 1 ? 'Ingresa un apellido' : null)
-		}
-	});
+	const { form, errors, enhance, message, delayed } = superForm(data.form);
 
 	
 	onMount(() => {
@@ -23,7 +17,6 @@
 			plan.value = data?.user?.plan || 'FOUR';
 		}
 	});
-	console.log(data)
 
 
 </script>
@@ -37,7 +30,7 @@
 				alt=""
 			/>
 			<div class="flex flex-col items-center gap-1">
-				<h1 class="text-2xl uppercase tracking-widest text-yellow-300 text-left">
+				<h1 class="text-2xl text-center uppercase tracking-widest text-yellow-300">
 					{data?.user?.first_name}
 					{data?.user?.last_name}
 				</h1>
@@ -63,12 +56,10 @@
 						Nombre
 						<input
 						bind:value={$form.first_name}
-						placeholder={data?.user?.first_name}
 							type="text"
 							id="first_name"
 							name="first_name"
 							class="input input-bordered input-primary w-full mt-1"
-
 						/></label
 					>
 					{#if $errors.first_name}
@@ -78,7 +69,6 @@
 						Apellido
 						<input
 						bind:value={$form.last_name}
-						placeholder={data?.user?.last_name}
 							type="text"
 							id="last_name"
 							name="last_name"
@@ -97,18 +87,27 @@
 					class="mt-1 file-input file-input-bordered file-input-primary w-full"
 				/>
 			</label> -->
-					<!-- {#if data?.user?.role !== 'ADMIN'}
+			{#if data?.user?.role !== 'ADMIN'}
 				<label for="plan" class="text-gray-600 flex flex-col gap-1">
 					Plan
-					<select id="plan" class="select select-primary w-full" required name="plan">
+					<select id="plan" class="select select-primary w-full" name="plan" bind:value={$form.plan}>
 						<option value="FOUR">4 clases menusales</option>
 						<option value="EIGHT">8 clases mensuales</option>
 						<option value="TWELVE">12 clases mensuales</option>
 						<option value="SIXTEEN">16 clases mensuales</option>
 					</select>
 				</label>
-			{/if} -->
-					<button class="btn bg-yellow-300 text-black" type="submit">Guardar</button>
+			{/if}
+					<button class="btn btn-success" type="submit">
+						{#if $delayed}
+							<span class="loading loading-spinner" />
+						{:else}
+							Guardar
+						{/if}
+					</button>
+					<button onclick="my_modal_1.close()" class="btn btn-outline btn-warning" type="reset"
+				>Cerrar</button
+			>
 				</form>
 			</form>
 		</dialog>
