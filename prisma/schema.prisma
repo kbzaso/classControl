@@ -19,6 +19,7 @@ model User {
   level        Level?    
   auth_session Session[]
   auth_key     Key[]
+  avatarUrl    String?
 }
 
 model Session {

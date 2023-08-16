@@ -6,11 +6,13 @@ import { setError, superValidate } from 'sveltekit-superforms/server';
 import { z } from 'zod';
 import { LuciaError } from 'lucia';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import { supabase } from '$lib/server/supabase';
 
 const updateSchema = z.object({
 	first_name: z.string(),
 	last_name: z.string(),
 	plan: z.string(),
+	avatar: z.string()
 });
 
 export const load: PageServerLoad = async ({ locals, depends }) => {
@@ -23,32 +25,53 @@ export const load: PageServerLoad = async ({ locals, depends }) => {
 			id: session?.user?.userId
 		}
 	});
-	
+
+	// Rellena con información de la BD el formulario
 	const form = superValidate(user, updateSchema);
-	
+
 	return {
 		user,
 		userId: session.user.userId,
-		form,
+		form
 	};
 };
 
 export const actions: Actions = {
-	update: async ( event ) => {
+	update: async (event) => {
 		const session = await event.locals.auth.validate();
-		const form = await superValidate(event.request, updateSchema);
+		const formData = await event.request.formData();
+		const form = await superValidate(formData, updateSchema);
 
 		const first_name = form.data.first_name;
 		const last_name = form.data.last_name;
 		const plan = form.data.plan || 'FOUR';
+		const avatarFile = formData.get('file');
+
+		const mimeType = avatarFile?.type;
+		const parts = mimeType.split('/');
+		const subtype = parts[1];
 
 		if (!form.valid) {
 			return fail(400, {
 				form
 			});
 		}
-
 		try {
+			// upload profile image to supabase storage
+
+			const { data, error } = await supabase.storage
+				.from('profiles')
+				.upload(`${session?.user?.userId}/avatar.${subtype}`, avatarFile, {
+					cacheControl: '3600',
+					upsert: true
+				});
+
+			if (data) {
+				console.log(data);
+			} else if (error) {
+				throw new Error('Error al subir la imagen a Supabase Storage');
+			}
+
 			const user = await client.user.update({
 				where: {
 					id: session?.user?.userId
@@ -56,17 +79,16 @@ export const actions: Actions = {
 				data: {
 					first_name,
 					last_name,
-					plan
+					plan,
+					avatarUrl: data.path
 				}
 			});
 			return {
 				form,
 				user
-			}
+			};
 		} catch (e) {
-			if (
-				e instanceof LuciaError || e instanceof PrismaClientKnownRequestError
-			) {
+			if (e instanceof LuciaError || e instanceof PrismaClientKnownRequestError) {
 				// user does not exist
 				// or invalid password
 				return setError(form, 'first_name', 'Usuario o clave incorrecta');
