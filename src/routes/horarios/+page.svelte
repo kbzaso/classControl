@@ -2,7 +2,7 @@
 	import Collapse from '$lib/components/Collapse.svelte';
 </script>
 
-<main>
+<main class="mb-20">
 	<h1 class="text-2xl font-semibold">Próximas clases</h1>
 	<Collapse />
 	<Collapse />

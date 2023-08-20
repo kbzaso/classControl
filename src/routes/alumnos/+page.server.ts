@@ -18,8 +18,16 @@ const addUserSchema = z.object({
 
 
 export const load: PageServerLoad = async ({ locals }) => {
-
 	const session = await locals.auth.validate();
+
+	const user = await client.user.findUnique({
+		where: {
+			id: session?.user?.userId
+		}
+	});
+
+	if (user?.role !== "ADMIN") throw redirect(302, "/");
+
 	if (!session) throw redirect(302, "/");
 
 	const form = superValidate(addUserSchema);

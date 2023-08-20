@@ -8,26 +8,20 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { PUBLIC_PROJECT_URL } from '$env/static/public'
+	import { PLAN } from '$lib/constants/const';
 
 	const { form, errors, enhance, delayed } = superForm(data.form);
 
-	onMount(() => {
-		if (data?.user?.role !== 'ADMIN') {
-			const plan = document.getElementById('plan') as HTMLSelectElement;
-			plan.value = data?.user?.plan || 'FOUR';
-		}
-	});
 </script>
 
 <main class="w-full mb-10">
 	<div>
 		<div class="w-full flex flex-col items-center gap-4">
-			<img
-				class="rounded-full h-40 w-40 object-cover"
-				src={`${PUBLIC_PROJECT_URL}/storage/v1/object/public/profiles/${data?.user?.avatarUrl}`}
-				alt="Avatar"
-			/>
-
+			<div class="avatar">
+				<div class="w-56 mask mask-squircle">
+				  <img alt="Avatar" src={ data?.user?.avatarUrl ? `${PUBLIC_PROJECT_URL}/storage/v1/object/public/profiles/${data?.user?.avatarUrl}` : 'https://assets.adnradio.cl/2022/03/Stone-Cold-Steve-Austin-WrestleMania-38-WWE.png'} />
+				</div>
+			  </div>
 			<div class="flex flex-col items-center gap-1">
 				<h1 class="text-2xl text-center uppercase tracking-widest text-yellow-300">
 					{data?.user?.first_name}
@@ -35,8 +29,6 @@
 				</h1>
 				<span>{data?.user?.email}</span>
 			</div>
-			<Badge level={data?.user?.level} size={'badge-md'} />
-			<button class="btn btn-link" onclick="my_modal_1.showModal()">Editar</button>
 		</div>
 
 		<dialog id="my_modal_1" class="modal modal-bottom sm:modal-middle">
@@ -87,15 +79,6 @@
 						class="file-input file-input-bordered file-input-primary w-full max-w-xs mt-1"
 					/>
 				</label>
-					<!-- <label for="foto" class="text-gray-600">
-				Fotografía
-				<input
-					type="file"
-					id="foto"
-					name="foto"
-					class="mt-1 file-input file-input-bordered file-input-primary w-full"
-				/>
-			</label> -->
 					{#if data?.user?.role !== 'ADMIN'}
 						<label for="plan" class="text-gray-600 flex flex-col gap-1">
 							Plan
@@ -126,11 +109,36 @@
 			</form>
 		</dialog>
 
-		{#if data?.user?.role !== 'ADMIN'}
-			<div class="space-y-4 mt-8">
-				<p>Tu plan comenzó el 30/05/2023 y vence el 30/06/2023</p>
-				<p>Te quedan 3 clases disponibles antes de tu renovación.</p>
+		
+			<div class="space-y-4">
+				<aside class="border border-gray-800 p-4 rounded-xl my-4">
+					<ul class="space-y-2 text-lg">
+						<li class="">
+							<span class="uppercase tracking-widest text-yellow-300 text-left text-sm">Nivel: </span>
+							<Badge level={data?.user?.level} size={'badge-md'} />
+						</li>
+						{#if data?.user?.role !== 'ADMIN'}
+						<li class="flex items-center gap-2">
+							<span class="uppercase tracking-widest text-yellow-300 text-left text-sm">Plan: </span>
+							<p>{PLAN[data.user?.plan]}</p>
+						</li>
+						<li class="flex items-center gap-2">
+							<span class="uppercase tracking-widest text-yellow-300 text-left text-sm"
+								>Clases disponibles:
+							</span>
+							<p>6</p>
+						</li>
+						<li class="flex items-center gap-2">
+							<span class="uppercase tracking-widest text-yellow-300 text-left text-sm">Su plan termina: </span>
+							<p>06/06/2023</p>
+						</li>
+						{/if}
+					</ul>
+					<button class="btn w-full mt-4 btn-success" onclick="my_modal_1.showModal()">
+						Editar</button
+					>
+				</aside>
 			</div>
-		{/if}
+		
 	</div>
 </main>

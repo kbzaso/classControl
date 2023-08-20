@@ -66,12 +66,6 @@ export const actions: Actions = {
 					upsert: true
 				});
 
-			if (data) {
-				console.log(data);
-			} else if (error) {
-				throw new Error('Error al subir la imagen a Supabase Storage');
-			}
-
 			const user = await client.user.update({
 				where: {
 					id: session?.user?.userId
