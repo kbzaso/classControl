@@ -20,6 +20,16 @@ model User {
   auth_session Session[]
   auth_key     Key[]
   avatarUrl    String?
+  classes      Class[]
+}
+
+model Class {
+  id           String    @id @unique @default(uuid())
+  createdAt    DateTime  @default(now())
+  when         DateTime
+  level        Level
+  max_students Int @default(12)
+  assistants   User[]
 }
 
 model Session {

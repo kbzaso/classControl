@@ -1,12 +1,17 @@
-<script>
+<script lang="ts">
 	import Collapse from '$lib/components/Collapse.svelte';
+	import type { PageData } from './$types';
+	
+	export let data: PageData;
+	console.log(data);
 </script>
 
 <main class="mb-20">
+	<span>Bienvenido {data.user.first_name} </span>
 	<h1 class="text-2xl font-semibold">Próximas clases</h1>
-	<Collapse />
-	<Collapse />
-	<Collapse />
+	{#each data.classes as training}
+		<Collapse data={training} userId={data.userId} />
+	{/each}
 	<button
 		class="btn backdrop-blur-xl bg-white/10 border-none rounded-full w-16 h-16 fixed bottom-20 right-6"
 		onclick="my_modal_5.showModal()"
@@ -17,6 +22,7 @@
 	</button>
 </main>
 
+<!-- ADD USERS -->
 <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
 	<form method="dialog" class="modal-box">
 		<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
