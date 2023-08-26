@@ -5,8 +5,6 @@
 	import { hiddenDrawer } from '$lib/stores.js';
 
 	export let data;
-
-	console.log(data)
 </script>
 
 <div class="p-4 container min-h-screen h-full flex flex-col mx-auto">

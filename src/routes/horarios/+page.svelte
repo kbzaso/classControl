@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import Collapse from '$lib/components/Collapse.svelte';
 	import type { PageData } from './$types';
 
@@ -10,7 +11,7 @@
 	<span>Bienvenido {data.user.first_name} </span>
 	<h1 class="text-2xl font-semibold">Próximas clases</h1>
 	{#each data.classes as training}
-		<Collapse data={training} userId={data.userId} />
+		<Collapse data={training} userId={data.userId} classId={training.id} action="?/delete" />
 	{/each}
 
 	{#if data.user.role === 'ADMIN'}
@@ -29,7 +30,7 @@
 <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
 	<form method="dialog" class="modal-box">
 		<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-		<form method="POST" action="?/create" class="mt-4 flex flex-col gap-4 p-4">
+		<form method="POST" action="?/create" class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl" use:enhance>
 			<h2 class="text-xl uppercase tracking-widest text-yellow-300 text-center">Agregar clase</h2>
 			<label for="when" class="text-gray-600"
 				>Fecha

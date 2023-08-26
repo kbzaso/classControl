@@ -29,12 +29,11 @@ export const actions: Actions = {
 		const session = await locals.auth.validate();
 		if (!session) throw redirect(302, "/");
 
-		const formData = await request.formData();
-		let when = formData.get("when");
-		when = new Date(when).toISOString()
-		const level = formData.get("level");
 
-		console.log(formData)
+		const formData = await request.formData();
+		const date = formData.get("when");
+		const when = new Date(date).toISOString()
+		const level = formData.get("level");
 
 		const newClass = await client.class.create({
 			data: {
@@ -42,6 +41,36 @@ export const actions: Actions = {
 				level: level,
 			},
 		});
-		throw redirect(302, "/horarios");
+		return { newClass }
 	},
+
+	delete: async ({ request, locals }) => {
+		const formData = await request.formData();
+		const id = formData.get("id");
+		console.log(id)
+
+		await client.class.delete({
+			where: {
+				id: id,
+			},
+		});
+		return { success: true, message: "Clase eliminada" }
+	},
+	update: async ({ request, locals }) => {
+		const formData = await request.formData();
+		const id = formData.get("id");
+		const when = formData.get("when");
+		const level = formData.get("level");
+
+		const updatedClass = await client.class.update({
+			where: {
+				id: id,
+			},
+			data: {
+				when: when,
+				level: level,
+			},
+		});
+		return { updatedClass }
+	}
 };

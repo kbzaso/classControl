@@ -3,6 +3,7 @@
 	import { fly } from 'svelte/transition';
 	import Badge from './Badge.svelte';
 	import { PUBLIC_PROJECT_URL } from '$env/static/public';
+	import { enhance } from '$app/forms';
 
 	$: checked = false;
 	const toggle = () => {
@@ -15,6 +16,8 @@
 
 	export let data: any;
 	export let userId: any;
+	export let classId: any;
+	export let action: any;
 
 	let userExists = false;
 	data.assistants.forEach((assistant) => {
@@ -22,6 +25,7 @@
 			userExists = true;
 		}
 	});
+	
 </script>
 
 <button
@@ -74,6 +78,15 @@
 			{:else}
 				<button class="btn btn-error w-full"> No Asistir </button>
 			{/if}
+			<div class="border border-gray-800 p-4 rounded-xl bg-zinc-900 flex gap-4">
+				<form  class="w-full">
+					<button class="btn btn-warning w-full">Editar</button>
+				</form>
+				<form action="/horarios?/delete" method="POST" class="w-full" use:enhance>
+					<input type="hidden" name="id" value={classId} />
+					<button class="btn btn-error w-full">Eliminar</button>
+				</form>
+			</div>
 		{/key}
 	</ul>
 {/if}
