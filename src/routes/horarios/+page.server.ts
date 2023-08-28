@@ -47,7 +47,6 @@ export const actions: Actions = {
 	delete: async ({ request, locals }) => {
 		const formData = await request.formData();
 		const id = formData.get("id");
-		console.log(id)
 
 		await client.class.delete({
 			where: {
@@ -59,18 +58,24 @@ export const actions: Actions = {
 	update: async ({ request, locals }) => {
 		const formData = await request.formData();
 		const id = formData.get("id");
-		const when = formData.get("when");
+		const date = formData.get("when");
+		const when = new Date(date).toISOString()
 		const level = formData.get("level");
 
-		const updatedClass = await client.class.update({
-			where: {
-				id: id,
-			},
-			data: {
-				when: when,
-				level: level,
-			},
-		});
-		return { updatedClass }
+		try	{
+			await client.class.update({
+				where: {
+					id: id,
+				},
+				data: {
+					when: when,
+					level: level,
+				},
+			});
+			return { success: true, message: "Clase actualizada" }
+		} catch (err) {
+			console.log(err)
+		}
+
 	}
 };

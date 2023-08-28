@@ -11,7 +11,7 @@
 	<span>Bienvenido {data.user.first_name} </span>
 	<h1 class="text-2xl font-semibold">Próximas clases</h1>
 	{#each data.classes as training}
-		<Collapse data={training} userId={data.userId} classId={training.id} action="?/delete" />
+		<Collapse data={training} userId={data.userId} classId={training.id} />
 	{/each}
 
 	{#if data.user.role === 'ADMIN'}
@@ -26,7 +26,7 @@
 	{/if}
 </main>
 
-<!-- ADD USERS -->
+<!-- ADD CLASS -->
 <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
 	<form method="dialog" class="modal-box">
 		<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
@@ -59,3 +59,5 @@
 		</form>
 	</form>
 </dialog>
+
+

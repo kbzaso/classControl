@@ -17,7 +17,6 @@
 	export let data: any;
 	export let userId: any;
 	export let classId: any;
-	export let action: any;
 
 	let userExists = false;
 	data.assistants.forEach((assistant) => {
@@ -79,8 +78,8 @@
 				<button class="btn btn-error w-full"> No Asistir </button>
 			{/if}
 			<div class="border border-gray-800 p-4 rounded-xl bg-zinc-900 flex gap-4">
-				<form  class="w-full">
-					<button class="btn btn-warning w-full">Editar</button>
+				<form class="w-full">
+					<button class="btn btn-warning w-full" onclick="my_modal_8.showModal()">Editar</button>
 				</form>
 				<form action="/horarios?/delete" method="POST" class="w-full" use:enhance>
 					<input type="hidden" name="id" value={classId} />
@@ -90,3 +89,39 @@
 		{/key}
 	</ul>
 {/if}
+
+
+<!-- UPDATE CLASS -->
+<dialog id="my_modal_8" class="modal modal-bottom sm:modal-middle">
+	<form method="dialog" class="modal-box">
+		<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+		<form method="POST" action="/horarios?/update" class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl" use:enhance>
+			<h2 class="text-xl uppercase tracking-widest text-yellow-300 text-center">Editar clase</h2>
+			<input type="hidden" name="id" value={classId} />
+			<label for="when" class="text-gray-600"
+				>Fecha
+
+				<input
+					type="datetime-local"
+					id="when"
+					name="when"
+					class="input input-bordered input-primary w-full mt-1 text-left"
+					min="2023-01-01"
+				/>
+			</label>
+
+			<label for="level" class="text-gray-600 flex flex-col gap-1">
+				Nivel
+				<select id="level" class="select select-primary w-full" required name="level">
+					<option value="BASIC">Básico</option>
+					<option value="INTERMEDIATE">Intermedio</option>
+					<option value="ADVANCED">Avanzado</option>
+				</select>
+			</label>
+			<button class="btn btn-success" type="submit">Crear</button>
+			<button onclick="my_modal_8.close()" class="btn btn-outline btn-warning" type="reset"
+				>Cerrar</button
+			>
+		</form>
+	</form>
+</dialog>
