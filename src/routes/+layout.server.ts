@@ -5,15 +5,15 @@ import { client } from '$lib/server/lucia';
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
-	const user = await client.user.findUnique({
-		where: {
-			id: session.user.userId
-		}
-	});
 	
 	if (!session) {
 		if (session) throw redirect(302, "/");
 	} else {
+		const user = await client.user.findUnique({
+			where: {
+				id: session.user.userId
+			}
+		});
 		return {
 			user,
 			userId: session.user.userId,

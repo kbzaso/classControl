@@ -1,9 +1,11 @@
 <script lang="ts">
 	import 'iconify-icon';
-	import { fly } from 'svelte/transition';
+	import { fly, slide } from 'svelte/transition';
 	import Badge from './Badge.svelte';
 	import { PUBLIC_PROJECT_URL } from '$env/static/public';
 	import { enhance } from '$app/forms';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
 
 	$: checked = false;
 	const toggle = () => {
@@ -24,7 +26,6 @@
 			userExists = true;
 		}
 	});
-	
 </script>
 
 <button
@@ -33,11 +34,15 @@
 	}`}
 	on:click={toggle}
 >
-	<div class="space-y-1 flex flex-col">
+	<div class="space-y-2 flex flex-col">
 		<h2 class="font-semibold capitalize">
 			{format(data.when, 'es-CL', { weekday: 'long', month: 'long', day: 'numeric' })}
 		</h2>
-		<Badge level={data?.level} size={'badge-md'} />
+		<div class="text-left flex gap-4">
+			<Badge level={data?.level} size={'badge-md'} />
+			<span class="flex gap-2 text-warning">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16 17v2H2v-2s0-4 7-4s7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.39 3.39 0 0 0-1.93.59a5 5 0 0 1 0 5.82A3.39 3.39 0 0 0 15 11a3.5 3.5 0 0 0 0-7Z"/></svg> {data.assistants.length}
+		</div>
 	</div>
 	<div class="flex gap-1">
 		<iconify-icon class="mt-1" icon="ri:time-line" />
@@ -53,7 +58,7 @@
 	<ul class=" space-y-4 border-x border-b border-blue-900 rounded-b-xl p-4" in:fly={{ y: 10 }}>
 		{#key checked}
 			{#each data?.assistants as assistant}
-				<li class="flex gap-2 items-center justify-between">
+				<li in:fly={{y:20}} out:slide class="flex gap-2 items-center justify-between">
 					<figure class="flex items-center gap-2">
 						<div class="avatar">
 							<div class="w-10 mask mask-squircle">
@@ -67,16 +72,33 @@
 						</div>
 						<p>{assistant.first_name} {assistant.last_name}</p>
 					</figure>
-					{#if !userExists}
-						<a href={`/alumnos/${assistant.id}`} class="btn btn-outline btn-warning">Ver</a>
+					{#if $page.data.user.role === 'ADMIN' && $page.data.userId !== assistant.id}
+						<a href={`/alumnos/${assistant.id}`} class="btn btn-outline btn-warning"
+							><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"
+								><path
+									fill="currentColor"
+									d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68ZM16 25c-5.3 0-10.9-3.93-12.93-9C5.1 10.93 10.7 7 16 7s10.9 3.93 12.93 9C26.9 21.07 21.3 25 16 25Z"
+								/><path
+									fill="currentColor"
+									d="M16 10a6 6 0 1 0 6 6a6 6 0 0 0-6-6Zm0 10a4 4 0 1 1 4-4a4 4 0 0 1-4 4Z"
+								/></svg
+							></a
+						>
 					{/if}
 				</li>
 			{/each}
 			{#if !userExists}
-				<button class="btn btn-success w-full"> Asistir </button>
+				<form action="/horarios?/addUserToClass" method="POST" use:enhance on:submit={() => userExists = true}>
+					<input type="hidden" name="id" value={classId} />
+					<button class="btn btn-success w-full">Asistir</button>
+				</form>
 			{:else}
-				<button class="btn btn-error w-full"> No Asistir </button>
+				<form action="/horarios?/deleteUserToClass" method="POST" use:enhance on:submit={() => userExists = false}>
+					<input type="hidden" name="id" value={classId} />
+					<button class="btn btn-error w-full"> No Asistir </button>
+				</form>
 			{/if}
+			{#if $page.data.user.role === 'ADMIN'}
 			<div class="border border-gray-800 p-4 rounded-xl bg-zinc-900 flex gap-4">
 				<form class="w-full">
 					<button class="btn btn-warning w-full" onclick="my_modal_8.showModal()">Editar</button>
@@ -86,16 +108,21 @@
 					<button class="btn btn-error w-full">Eliminar</button>
 				</form>
 			</div>
+			{/if}
 		{/key}
 	</ul>
 {/if}
-
 
 <!-- UPDATE CLASS -->
 <dialog id="my_modal_8" class="modal modal-bottom sm:modal-middle">
 	<form method="dialog" class="modal-box">
 		<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-		<form method="POST" action="/horarios?/update" class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl" use:enhance>
+		<form
+			method="POST"
+			action="/horarios?/update"
+			class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl"
+			use:enhance
+		>
 			<h2 class="text-xl uppercase tracking-widest text-yellow-300 text-center">Editar clase</h2>
 			<input type="hidden" name="id" value={classId} />
 			<label for="when" class="text-gray-600"
@@ -118,7 +145,7 @@
 					<option value="ADVANCED">Avanzado</option>
 				</select>
 			</label>
-			<button class="btn btn-success" type="submit">Crear</button>
+			<button class="btn btn-success" type="submit">Actualizar</button>
 			<button onclick="my_modal_8.close()" class="btn btn-outline btn-warning" type="reset"
 				>Cerrar</button
 			>

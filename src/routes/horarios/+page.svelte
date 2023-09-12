@@ -1,10 +1,20 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
 	import Collapse from '$lib/components/Collapse.svelte';
+	import { superForm, dateProxy } from 'sveltekit-superforms/client';
 	import type { PageData } from './$types';
+	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
+	import FormAlert from '$lib/components/FormAlert.svelte';
 
 	export let data: PageData;
-	console.log(data);
+
+	const { form, errors, enhance, message, delayed, constraints } = superForm(data.form, {
+		validators: {
+			level: (level) => (level.length <= 1 ? 'Selecciona una opción' : null),
+		}
+	});
+	const date = dateProxy(form, 'when', { format: 'datetime-local', empty: 'undefined' });
+
+	const now = new Date().toISOString().slice(0, 16)
 </script>
 
 <main class="mb-20">
@@ -30,34 +40,62 @@
 <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
 	<form method="dialog" class="modal-box">
 		<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
-		<form method="POST" action="?/create" class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl" use:enhance>
+		<form
+			method="POST"
+			action="?/create"
+			class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl"
+			use:enhance
+		>
 			<h2 class="text-xl uppercase tracking-widest text-yellow-300 text-center">Agregar clase</h2>
 			<label for="when" class="text-gray-600"
 				>Fecha
 
 				<input
+					value={$date}
 					type="datetime-local"
 					id="when"
 					name="when"
 					class="input input-bordered input-primary w-full mt-1 text-left"
-					min="2023-01-01"
+					aria-invalid={$errors.when ? 'true' : undefined}
+					on:blur={(e) => ($date = e.currentTarget.value)}
+					on:input={(e) => {
+						const value = e.currentTarget.value;
+						if (/^[1-9]\d{3}-\d\d-\d\d$/.test(value)) $date = value;
+					}}
+					{...$constraints.when}
+					min={now}
 				/>
 			</label>
+			{#if $errors.when}
+				<FormAlert bind:errorMessage={$errors.when} />
+			{/if}
 
 			<label for="level" class="text-gray-600 flex flex-col gap-1">
 				Nivel
-				<select id="level" class="select select-primary w-full" required name="level">
+				<select
+					id="level"
+					class="select select-primary w-full"
+					name="level"
+					bind:value={$form.level}
+				>
 					<option value="BASIC">Básico</option>
 					<option value="INTERMEDIATE">Intermedio</option>
 					<option value="ADVANCED">Avanzado</option>
 				</select>
 			</label>
-			<button class="btn btn-success" type="submit">Crear</button>
+			{#if $errors.level}
+				<FormAlert bind:errorMessage={$errors.level} />
+			{/if}
+			<button class="btn btn-success" type="submit">
+				{#if $delayed}
+				<span class="loading loading-spinner" />
+			{:else}
+				Crear
+			{/if}
+				</button>
 			<button onclick="my_modal_5.close()" class="btn btn-outline btn-warning" type="reset"
 				>Cerrar</button
 			>
 		</form>
 	</form>
 </dialog>
-
-

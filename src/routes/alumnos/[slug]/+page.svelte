@@ -57,7 +57,7 @@
 				<p>06/06/2023</p>
 			</li>
 		</ul>
-		<button class="btn w-full mt-4 btn-success" onclick="my_modal_3.showModal()">
+		<button class="btn w-full mt-4 btn-warning" onclick="my_modal_3.showModal()">
 			Editar</button
 		>
 		<!-- DELETE FORM -->

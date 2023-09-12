@@ -134,7 +134,7 @@
 						</li>
 						{/if}
 					</ul>
-					<button class="btn w-full mt-4 btn-success" onclick="my_modal_1.showModal()">
+					<button class="btn w-full mt-4 btn-warning" onclick="my_modal_1.showModal()">
 						Editar</button
 					>
 				</aside>
