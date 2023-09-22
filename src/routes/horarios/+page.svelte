@@ -18,9 +18,23 @@
 		form: formDelete,
 		delayed: delayedDelete,
 		enhance: enhanceDelete
-	} = superForm(data.formDelte);
+	} = superForm(data.formDelete, {
+  id: '01'
+});
 
-	console.log(data);
+	const {
+		delayed: delayedAssistToClass,
+		enhance: enhanceAssistToClass
+	} = superForm(data.formAssistToClass, {
+  id: '02'
+});
+	
+	const {
+		delayed: delayedNoAssistToClass,
+		enhance: enhanceNoAssistToClass
+	} = superForm(data.formNoAssistToClass, {
+  id: '03'
+});
 
 	const date = dateProxy(form, 'when', { format: 'datetime-local', empty: 'undefined' });
 
@@ -38,9 +52,15 @@
 			data={training}
 			userId={data.userId}
 			classId={training.id}
-			{formDelete}
+
 			{delayedDelete}
 			{enhanceDelete}
+
+			{delayedAssistToClass}
+			{enhanceAssistToClass}
+
+			{delayedNoAssistToClass}
+			{enhanceNoAssistToClass}
 		/>
 	{/each}
 	{/if}

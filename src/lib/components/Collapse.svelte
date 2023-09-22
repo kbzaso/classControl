@@ -6,6 +6,9 @@
 	import { enhance } from '$app/forms';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
+	import { superForm } from 'sveltekit-superforms/client';
+	import { writable } from 'svelte/store';
+	import { boolean } from 'zod';
 
 	$: checked = false;
 	const toggle = () => {
@@ -19,16 +22,24 @@
 	export let data: any;
 	export let userId: any;
 	export let classId: any;
-	export let formDelete: any;
+
 	export let delayedDelete: any;
 	export let enhanceDelete: any;
 
-	let userExists = false;
-	data.assistants.forEach((assistant) => {
-		if (assistant.id === userId) {
-			userExists = true;
-		}
+	export let delayedAssistToClass: any;
+	export let enhanceAssistToClass: any;
+
+	export let delayedNoAssistToClass: any;
+	export let enhanceNoAssistToClass: any;
+
+	$: userExists = data.assistants.some((assistant) => assistant.id == userId )
+
+	onMount(() => {
+		console.log(data.assistants.some((assistant) => assistant.id == userId ))
+		$: userExists = data.assistants.some((assistant) => assistant.id == userId )
 	});
+
+	
 </script>
 
 <button
@@ -91,14 +102,27 @@
 				</li>
 			{/each}
 			{#if !userExists}
-				<form action="/horarios?/addUserToClass" method="POST" use:enhance on:submit={() => userExists = true}>
+				<form action="/horarios?/addUserToClass" method="POST" use:enhanceAssistToClass>
 					<input type="hidden" name="id" value={classId} />
-					<button class="btn btn-success w-full">Asistir</button>
+					<button class="btn btn-success w-full" type="submit">
+						{#if $delayedAssistToClass}
+							<span class="loading loading-spinner" />
+						{:else}
+							Asistir
+						{/if}
+					</button>
 				</form>
 			{:else}
-				<form action="/horarios?/deleteUserToClass" method="POST" use:enhance on:submit={() => userExists = false}>
+				<form action="/horarios?/deleteUserToClass" method="POST" use:enhanceNoAssistToClass>
 					<input type="hidden" name="id" value={classId} />
-					<button class="btn btn-error w-full"> No Asistir </button>
+
+					<button class="btn btn-error w-full" type="submit">
+						{#if $delayedNoAssistToClass}
+							<span class="loading loading-spinner" />
+						{:else}
+							No Asistir
+						{/if}
+					</button>
 				</form>
 			{/if}
 			{#if $page.data.user.role === 'ADMIN'}
