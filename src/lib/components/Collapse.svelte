@@ -19,6 +19,9 @@
 	export let data: any;
 	export let userId: any;
 	export let classId: any;
+	export let formDelete: any;
+	export let delayedDelete: any;
+	export let enhanceDelete: any;
 
 	let userExists = false;
 	data.assistants.forEach((assistant) => {
@@ -103,9 +106,15 @@
 				<form class="w-full">
 					<button class="btn btn-warning w-full" onclick="my_modal_8.showModal()">Editar</button>
 				</form>
-				<form action="/horarios?/delete" method="POST" class="w-full" use:enhance>
+				<form action="/horarios?/delete" method="POST" class="w-full" use:enhanceDelete>
 					<input type="hidden" name="id" value={classId} />
-					<button class="btn btn-error w-full">Eliminar</button>
+					<button class="btn btn-error w-full" type="submit">
+						{#if $delayedDelete}
+							<span class="loading loading-spinner" />
+						{:else}
+							Eliminar
+						{/if}
+					</button>
 				</form>
 			</div>
 			{/if}

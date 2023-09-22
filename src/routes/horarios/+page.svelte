@@ -4,26 +4,46 @@
 	import type { PageData } from './$types';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import FormAlert from '$lib/components/FormAlert.svelte';
+	import { onMount } from 'svelte';
 
 	export let data: PageData;
 
 	const { form, errors, enhance, message, delayed, constraints } = superForm(data.form, {
 		validators: {
-			level: (level) => (level.length <= 1 ? 'Selecciona una opción' : null),
+			level: (level) => (level.length <= 1 ? 'Selecciona una opción' : null)
 		}
 	});
+
+	const {
+		form: formDelete,
+		delayed: delayedDelete,
+		enhance: enhanceDelete
+	} = superForm(data.formDelte);
+
+	console.log(data);
+
 	const date = dateProxy(form, 'when', { format: 'datetime-local', empty: 'undefined' });
 
-	const now = new Date().toISOString().slice(0, 16)
+	const now = new Date().toISOString().slice(0, 16);
 </script>
 
 <main class="mb-20">
-	<span>Bienvenido {data.user.first_name} </span>
+	<span class="font-semibold">Bienvenido {data.user.first_name} </span>
+	{#if data.classes.length === 0}
+		<p class="text-sm">Actualmente no hay clases agendadas 😔</p>
+	{:else}
 	<h1 class="text-2xl font-semibold">Próximas clases</h1>
 	{#each data.classes as training}
-		<Collapse data={training} userId={data.userId} classId={training.id} />
+		<Collapse
+			data={training}
+			userId={data.userId}
+			classId={training.id}
+			{formDelete}
+			{delayedDelete}
+			{enhanceDelete}
+		/>
 	{/each}
-
+	{/if}
 	{#if data.user.role === 'ADMIN'}
 		<button
 			class="btn backdrop-blur-xl bg-white/10 border-none rounded-full w-16 h-16 fixed bottom-20 right-6"
@@ -88,11 +108,11 @@
 			{/if}
 			<button class="btn btn-success" type="submit">
 				{#if $delayed}
-				<span class="loading loading-spinner" />
-			{:else}
-				Crear
-			{/if}
-				</button>
+					<span class="loading loading-spinner" />
+				{:else}
+					Crear
+				{/if}
+			</button>
 			<button onclick="my_modal_5.close()" class="btn btn-outline btn-warning" type="reset"
 				>Cerrar</button
 			>

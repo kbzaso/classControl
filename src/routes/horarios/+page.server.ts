@@ -3,10 +3,15 @@ import type { PageServerLoad } from "./$types";
 import { client } from "$lib/server/lucia";
 import { z } from "zod";
 import { superValidate } from "sveltekit-superforms/server";
+import type { Level } from "@prisma/client";
 
 const addClassSchema = z.object({
 	when: z.date(),
 	level: z.string().min(1),
+});
+
+const deleteClassSchema = z.object({
+	id: z.string().min(1),
 });
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -14,6 +19,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 	if (!session) throw redirect(302, "/");
 
 	const form = superValidate(addClassSchema);
+
+	const formDelete = await superValidate(deleteClassSchema);
 
 	const classes = await client.class.findMany({
 		select: {
@@ -29,6 +36,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		classes,
 		user: session.user,
 		form,
+		formDelete,
 	};
 
 };
@@ -61,6 +69,9 @@ export const actions: Actions = {
 
 	delete: async ({ request, locals }) => {
 		const formData = await request.formData();
+
+		const formDelete = await superValidate(formData, deleteClassSchema);
+
 		const id = formData.get("id");
 
 		await client.class.delete({
@@ -68,28 +79,32 @@ export const actions: Actions = {
 				id: id,
 			},
 		});
-		return { success: true, message: "Clase eliminada" }
+		return { success: true, message: "Clase eliminada", formDelete }
 	},
 	update: async ({ request, locals }) => {
 		const formData = await request.formData();
 		const id = formData.get("id");
 		const date = formData.get("when");
-		const when = new Date(date).toISOString()
-		const level = formData.get("level");
+		const when = date !== null ? new Date(date).toISOString() : undefined;
+		const level = formData.get("level") as Level;
 
-		try	{
-			await client.class.update({
-				where: {
-					id: id,
-				},
-				data: {
-					when: when,
-					level: level,
-				},
-			});
-			return { success: true, message: "Clase actualizada" }
+		try {
+			if (when !== undefined && level !== null) {
+				await client.class.update({
+					where: {
+						id: id?.toString(),
+					},
+					data: {
+						when: when,
+						level: level,
+					},
+				});
+				return { success: true, message: "Clase actualizada" };
+			} else {
+				return { success: false, message: "Level cannot be null" };
+			}
 		} catch (err) {
-			console.log(err)
+			console.log(err);
 		}
 	},
 	addUserToClass: async ({ request, locals }) => {
