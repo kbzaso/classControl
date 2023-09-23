@@ -35,7 +35,6 @@
 	$: userExists = data.assistants.some((assistant) => assistant.id == userId )
 
 	onMount(() => {
-		console.log(data.assistants.some((assistant) => assistant.id == userId ))
 		$: userExists = data.assistants.some((assistant) => assistant.id == userId )
 	});
 
