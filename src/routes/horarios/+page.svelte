@@ -15,26 +15,32 @@
 	});
 
 	const {
-		form: formDelete,
 		delayed: delayedDelete,
 		enhance: enhanceDelete
 	} = superForm(data.formDelete, {
-  id: '01'
-});
+		id: '01'
+	});
 
-	const {
-		delayed: delayedAssistToClass,
-		enhance: enhanceAssistToClass
-	} = superForm(data.formAssistToClass, {
-  id: '02'
-});
-	
-	const {
-		delayed: delayedNoAssistToClass,
-		enhance: enhanceNoAssistToClass
-	} = superForm(data.formNoAssistToClass, {
-  id: '03'
-});
+	const { delayed: delayedAssistToClass, enhance: enhanceAssistToClass } = superForm(
+		data.formAssistToClass,
+		{
+			id: '02'
+		}
+	);
+
+	const { delayed: delayedNoAssistToClass, enhance: enhanceNoAssistToClass } = superForm(
+		data.formNoAssistToClass,
+		{
+			id: '03'
+		}
+	);
+
+	const { form: formEditClass, delayed: delayedEditClass, enhance: enhanceEditClass } = superForm(
+		data.formEditClass,
+		{
+			id: '04'
+		}
+	);
 
 	const date = dateProxy(form, 'when', { format: 'datetime-local', empty: 'undefined' });
 
@@ -46,23 +52,23 @@
 	{#if data.classes.length === 0}
 		<p class="text-sm">Actualmente no hay clases agendadas 😔</p>
 	{:else}
-	<h1 class="text-2xl font-semibold">Próximas clases</h1>
-	{#each data.classes as training}
-		<Collapse
-			data={training}
-			userId={data.userId}
-			classId={training.id}
-
-			{delayedDelete}
-			{enhanceDelete}
-
-			{delayedAssistToClass}
-			{enhanceAssistToClass}
-
-			{delayedNoAssistToClass}
-			{enhanceNoAssistToClass}
-		/>
-	{/each}
+		<h1 class="text-2xl font-semibold">Próximas clases</h1>
+		{#each data.classes as training}
+			<Collapse
+				data={training}
+				userId={data.userId}
+				classId={training.id}
+				{delayedDelete}
+				{enhanceDelete}
+				{delayedAssistToClass}
+				{enhanceAssistToClass}
+				{delayedNoAssistToClass}
+				{enhanceNoAssistToClass}
+				
+				{delayedEditClass}
+				{enhanceEditClass}
+			/>
+		{/each}
 	{/if}
 	{#if data.user.role === 'ADMIN'}
 		<button

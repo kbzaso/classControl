@@ -10,6 +10,11 @@ const addClassSchema = z.object({
 	level: z.string().min(1)
 });
 
+const editClassSchema = z.object({
+	when: z.date(),
+	level: z.string().min(1)
+});
+
 const deleteClassSchema = z.object({
 	id: z.string().min(1)
 });
@@ -31,6 +36,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const formAssistToClass = await superValidate(assistToClassSchema);
 	
 	const formNoAssistToClass = await superValidate(noAssistToClassSchema);
+	
+	const formEditClass = await superValidate(editClassSchema);
 
 	const classes = await client.class.findMany({
 		orderBy: {
@@ -56,7 +63,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 		form,
 		formDelete,
 		formAssistToClass,
-		formNoAssistToClass
+		formNoAssistToClass,
+		formEditClass
 	};
 };
 
@@ -100,6 +108,9 @@ export const actions: Actions = {
 	},
 	update: async ({ request, locals }) => {
 		const formData = await request.formData();
+
+		const formEditClass = await superValidate(formData, editClassSchema);
+
 		const id = formData.get('id');
 		const date = formData.get('when');
 		const when = date !== null ? new Date(date).toISOString() : undefined;
@@ -116,7 +127,7 @@ export const actions: Actions = {
 						level: level
 					}
 				});
-				return { success: true, message: 'Clase actualizada' };
+				return { success: true, message: 'Clase actualizada', formEditClass };
 			} else {
 				return { success: false, message: 'Level cannot be null' };
 			}

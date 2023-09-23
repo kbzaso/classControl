@@ -9,6 +9,7 @@
 	import { superForm } from 'sveltekit-superforms/client';
 	import { writable } from 'svelte/store';
 	import { boolean } from 'zod';
+	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 
 	$: checked = false;
 	const toggle = () => {
@@ -32,6 +33,9 @@
 	export let delayedNoAssistToClass: any;
 	export let enhanceNoAssistToClass: any;
 
+	export let delayedEditClass: any;
+	export let enhanceEditClass: any;
+
 	$: userExists = data.assistants.some((assistant) => assistant.id == userId);
 
 	onMount(() => {
@@ -39,7 +43,9 @@
 	});
 
 	$: firstThreeChars = data.id.substring(0, 3);
-	
+	console.log(data.when)
+
+	let date = data.when.toISOString().slice(0, 16);
 </script>
 
 <button
@@ -159,6 +165,7 @@
 			method="POST"
 			action="/horarios?/update"
 			class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl"
+			use:enhanceEditClass
 		>
 			<h2 class="text-xl uppercase tracking-widest text-yellow-300 text-center">Editar clase</h2>
 			<input type="hidden" name="id" value={classId} />
@@ -166,6 +173,7 @@
 				>Fecha
 
 				<input
+					bind:value={date}
 					type="datetime-local"
 					id="when"
 					name="when"
@@ -176,13 +184,20 @@
 
 			<label for="level" class="text-gray-600 flex flex-col gap-1">
 				Nivel
-				<select id="level" class="select select-primary w-full" required name="level">
+				<select id="level" class="select select-primary w-full" required name="level" bind:value={data.level}>
 					<option value="BASIC">Básico</option>
 					<option value="INTERMEDIATE">Intermedio</option>
 					<option value="ADVANCED">Avanzado</option>
 				</select>
 			</label>
-			<button class="btn btn-success" type="submit">Actualizar</button>
+			<button class="btn btn-success w-full" type="submit">
+				{#if $delayedEditClass}
+					<span class="loading loading-spinner" />
+				{:else}
+				Actualizar
+				{/if}
+			</button>
+
 			<button onclick={`my_modal_${firstThreeChars}.close()`} class="btn btn-outline btn-warning" type="reset"
 				>Cerrar</button
 			>
