@@ -32,12 +32,13 @@
 	export let delayedNoAssistToClass: any;
 	export let enhanceNoAssistToClass: any;
 
-	$: userExists = data.assistants.some((assistant) => assistant.id == userId )
+	$: userExists = data.assistants.some((assistant) => assistant.id == userId);
 
 	onMount(() => {
-		$: userExists = data.assistants.some((assistant) => assistant.id == userId )
+		$: userExists = data.assistants.some((assistant) => assistant.id == userId);
 	});
 
+	$: firstThreeChars = data.id.substring(0, 3);
 	
 </script>
 
@@ -54,7 +55,14 @@
 		<div class="text-left flex gap-4">
 			<Badge level={data?.level} size={'badge-md'} />
 			<span class="flex gap-2 text-warning">
-				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M16 17v2H2v-2s0-4 7-4s7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.39 3.39 0 0 0-1.93.59a5 5 0 0 1 0 5.82A3.39 3.39 0 0 0 15 11a3.5 3.5 0 0 0 0-7Z"/></svg> {data.assistants.length}
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+					><path
+						fill="currentColor"
+						d="M16 17v2H2v-2s0-4 7-4s7 4 7 4m-3.5-9.5A3.5 3.5 0 1 0 9 11a3.5 3.5 0 0 0 3.5-3.5m3.44 5.5A5.32 5.32 0 0 1 18 17v2h4v-2s0-3.63-6.06-4M15 4a3.39 3.39 0 0 0-1.93.59a5 5 0 0 1 0 5.82A3.39 3.39 0 0 0 15 11a3.5 3.5 0 0 0 0-7Z"
+					/></svg
+				>
+				{data.assistants.length}
+			</span>
 		</div>
 	</div>
 	<div class="flex gap-1">
@@ -71,7 +79,7 @@
 	<ul class=" space-y-4 border-x border-b border-blue-900 rounded-b-xl p-4" in:fly={{ y: 10 }}>
 		{#key checked}
 			{#each data?.assistants as assistant}
-				<li in:fly={{y:20}} out:slide class="flex gap-2 items-center justify-between">
+				<li in:fly={{ y: 20 }} out:slide class="flex gap-2 items-center justify-between">
 					<figure class="flex items-center gap-2">
 						<div class="avatar">
 							<div class="w-10 mask mask-squircle">
@@ -125,35 +133,32 @@
 				</form>
 			{/if}
 			{#if $page.data.user.role === 'ADMIN'}
-			<div class="border border-gray-800 p-4 rounded-xl bg-zinc-900 flex gap-4">
-				<form class="w-full">
-					<button class="btn btn-warning w-full" onclick="my_modal_8.showModal()">Editar</button>
-				</form>
-				<form action="/horarios?/delete" method="POST" class="w-full" use:enhanceDelete>
-					<input type="hidden" name="id" value={classId} />
-					<button class="btn btn-error w-full" type="submit">
-						{#if $delayedDelete}
-							<span class="loading loading-spinner" />
-						{:else}
-							Eliminar
-						{/if}
-					</button>
-				</form>
-			</div>
+				<div class="border border-gray-800 p-4 rounded-xl bg-zinc-900 space-y-4">
+					<button class="btn btn-warning w-full" onclick={`my_modal_${firstThreeChars}.showModal()`}>Editar</button>
+					<form action="/horarios?/delete" method="POST" class="w-full" use:enhanceDelete>
+						<input type="hidden" name="id" value={classId} />
+						<button class="btn btn-error w-full btn-outline" type="submit">
+							{#if $delayedDelete}
+								<span class="loading loading-spinner" />
+							{:else}
+								Eliminar
+							{/if}
+						</button>
+					</form>
+				</div>
 			{/if}
 		{/key}
 	</ul>
 {/if}
 
 <!-- UPDATE CLASS -->
-<dialog id="my_modal_8" class="modal modal-bottom sm:modal-middle">
+<dialog id={`my_modal_${firstThreeChars}`} class="modal modal-bottom sm:modal-middle">
 	<form method="dialog" class="modal-box">
 		<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 		<form
 			method="POST"
 			action="/horarios?/update"
 			class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl"
-			use:enhance
 		>
 			<h2 class="text-xl uppercase tracking-widest text-yellow-300 text-center">Editar clase</h2>
 			<input type="hidden" name="id" value={classId} />
@@ -178,9 +183,12 @@
 				</select>
 			</label>
 			<button class="btn btn-success" type="submit">Actualizar</button>
-			<button onclick="my_modal_8.close()" class="btn btn-outline btn-warning" type="reset"
+			<button onclick={`my_modal_${firstThreeChars}.close()`} class="btn btn-outline btn-warning" type="reset"
 				>Cerrar</button
 			>
 		</form>
+	</form>
+	<form method="dialog" class="modal-backdrop">
+		<button>close</button>
 	</form>
 </dialog>
