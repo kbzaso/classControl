@@ -10,11 +10,8 @@
 	import { writable } from 'svelte/store';
 	import { boolean } from 'zod';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
+	import { classOpenId } from '$lib/stores.js';
 
-	$: checked = false;
-	const toggle = () => {
-		checked = !checked;
-	};
 
 	const format = (date, locale, options) => {
 		return new Intl.DateTimeFormat(locale, options).format(date);
@@ -43,19 +40,30 @@
 	});
 
 	$: firstThreeChars = data.id.substring(0, 3);
-	
+
 	let date = data?.when.toLocaleString('en-US', { timeZone: 'America/Santiago' });
-	date = new Date(date)
+	date = new Date(date);
 
 	const offset = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
 	const dateWithOffset = new Date(date.getTime() - offset);
 	$: isoString = dateWithOffset.toISOString().slice(0, 16);
 
+	
+	$: isOpen = $classOpenId === classId ? true : false ;
+
+	function toggle() {
+		if($classOpenId === classId) {
+			$classOpenId = '';
+		} else {
+			$classOpenId = classId;
+		}
+	}
+
 </script>
 
 <button
 	class={`active:scale-105 w-full h-fit  p-4 mt-2 space-y-1 flex justify-between min-w-[345px] transition-all ${
-		checked ? 'bg-blue-950 rounded-t-xl' : 'bg-white/10 rounded-md'
+		isOpen ? 'bg-blue-950 rounded-t-xl' : 'bg-white/10 rounded-md'
 	}`}
 	on:click={toggle}
 >
@@ -81,14 +89,14 @@
 		<span>{format(data.when, 'es-CL', { timeStyle: 'short', timeZone: 'America/Santiago' })}</span>
 		<iconify-icon
 			class="mt-1 h-fit text-yellow-300 transition-all"
-			class:rotate-180={checked}
+			class:rotate-180={isOpen}
 			icon="ion:chevron-down"
 		/>
 	</div>
 </button>
-{#if checked}
+{#if isOpen}
 	<ul class=" space-y-4 border-x border-b border-blue-900 rounded-b-xl p-4" in:fly={{ y: 10 }}>
-		{#key checked}
+		{#key isOpen}
 			{#each data?.assistants as assistant}
 				<li in:fly={{ y: 20 }} out:slide class="flex gap-2 items-center justify-between">
 					<figure class="flex items-center gap-2">

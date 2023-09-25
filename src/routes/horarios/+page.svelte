@@ -3,6 +3,7 @@
 	import { superForm, dateProxy } from 'sveltekit-superforms/client';
 	import type { PageData } from './$types';
 	import FormAlert from '$lib/components/FormAlert.svelte';
+	import { writable } from 'svelte/store';
 
 	export let data: PageData;
 
@@ -12,10 +13,7 @@
 		}
 	});
 
-	const {
-		delayed: delayedDelete,
-		enhance: enhanceDelete
-	} = superForm(data.formDelete, {
+	const { delayed: delayedDelete, enhance: enhanceDelete } = superForm(data.formDelete, {
 		id: '01'
 	});
 
@@ -33,16 +31,21 @@
 		}
 	);
 
-	const { form: formEditClass, delayed: delayedEditClass, enhance: enhanceEditClass } = superForm(
-		data.formEditClass,
-		{
-			id: '04'
-		}
-	);
+	const {
+		form: formEditClass,
+		delayed: delayedEditClass,
+		enhance: enhanceEditClass
+	} = superForm(data.formEditClass, {
+		id: '04'
+	});
 
 	const date = dateProxy(form, 'when', { format: 'datetime-local', empty: 'undefined' });
 
 	const now = new Date().toISOString().slice(0, 16);
+
+
+	console.log(data)
+
 	
 </script>
 
@@ -52,7 +55,7 @@
 		<p class="text-sm">Actualmente no hay clases agendadas 😔</p>
 	{:else}
 		<h1 class="text-2xl font-semibold">Próximas clases</h1>
-		{#each data.classes as training}
+		{#each data.classes as training, index}
 			<Collapse
 				data={training}
 				userId={data.userId}
@@ -63,7 +66,6 @@
 				{enhanceAssistToClass}
 				{delayedNoAssistToClass}
 				{enhanceNoAssistToClass}
-				
 				{delayedEditClass}
 				{enhanceEditClass}
 			/>
@@ -142,5 +144,8 @@
 				>Cerrar</button
 			>
 		</form>
+	</form>
+	<form method="dialog" class="modal-backdrop">
+		<button>close</button>
 	</form>
 </dialog>
