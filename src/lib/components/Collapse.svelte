@@ -43,9 +43,14 @@
 	});
 
 	$: firstThreeChars = data.id.substring(0, 3);
-	console.log(data.when)
+	
+	let date = data?.when.toLocaleString('en-US', { timeZone: 'America/Santiago' });
+	date = new Date(date)
 
-	let date = data.when.toISOString().slice(0, 16);
+	const offset = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+	const dateWithOffset = new Date(date.getTime() - offset);
+	$: isoString = dateWithOffset.toISOString().slice(0, 16);
+
 </script>
 
 <button
@@ -73,7 +78,7 @@
 	</div>
 	<div class="flex gap-1">
 		<iconify-icon class="mt-1" icon="ri:time-line" />
-		<span>{format(data.when, 'es-CL', { timeStyle: 'short' })}</span>
+		<span>{format(data.when, 'es-CL', { timeStyle: 'short', timeZone: 'America/Santiago' })}</span>
 		<iconify-icon
 			class="mt-1 h-fit text-yellow-300 transition-all"
 			class:rotate-180={checked}
@@ -140,7 +145,9 @@
 			{/if}
 			{#if $page.data.user.role === 'ADMIN'}
 				<div class="border border-gray-800 p-4 rounded-xl bg-zinc-900 space-y-4">
-					<button class="btn btn-warning w-full" onclick={`my_modal_${firstThreeChars}.showModal()`}>Editar</button>
+					<button class="btn btn-warning w-full" onclick={`my_modal_${firstThreeChars}.showModal()`}
+						>Editar</button
+					>
 					<form action="/horarios?/delete" method="POST" class="w-full" use:enhanceDelete>
 						<input type="hidden" name="id" value={classId} />
 						<button class="btn btn-error w-full btn-outline" type="submit">
@@ -173,7 +180,7 @@
 				>Fecha
 
 				<input
-					bind:value={date}
+					bind:value={isoString}
 					type="datetime-local"
 					id="when"
 					name="when"
@@ -184,7 +191,13 @@
 
 			<label for="level" class="text-gray-600 flex flex-col gap-1">
 				Nivel
-				<select id="level" class="select select-primary w-full" required name="level" bind:value={data.level}>
+				<select
+					id="level"
+					class="select select-primary w-full"
+					required
+					name="level"
+					bind:value={data.level}
+				>
 					<option value="BASIC">Básico</option>
 					<option value="INTERMEDIATE">Intermedio</option>
 					<option value="ADVANCED">Avanzado</option>
@@ -194,12 +207,14 @@
 				{#if $delayedEditClass}
 					<span class="loading loading-spinner" />
 				{:else}
-				Actualizar
+					Actualizar
 				{/if}
 			</button>
 
-			<button onclick={`my_modal_${firstThreeChars}.close()`} class="btn btn-outline btn-warning" type="reset"
-				>Cerrar</button
+			<button
+				onclick={`my_modal_${firstThreeChars}.close()`}
+				class="btn btn-outline btn-warning"
+				type="reset">Cerrar</button
 			>
 		</form>
 	</form>

@@ -2,9 +2,7 @@
 	import Collapse from '$lib/components/Collapse.svelte';
 	import { superForm, dateProxy } from 'sveltekit-superforms/client';
 	import type { PageData } from './$types';
-	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import FormAlert from '$lib/components/FormAlert.svelte';
-	import { onMount } from 'svelte';
 
 	export let data: PageData;
 
@@ -45,6 +43,7 @@
 	const date = dateProxy(form, 'when', { format: 'datetime-local', empty: 'undefined' });
 
 	const now = new Date().toISOString().slice(0, 16);
+	
 </script>
 
 <main class="mb-20">
@@ -97,7 +96,7 @@
 				>Fecha
 
 				<input
-					value={$date}
+					bind:value={$date}
 					type="datetime-local"
 					id="when"
 					name="when"
