@@ -19,7 +19,8 @@ export const auth = lucia({
 			last_name: data.last_name,
 			role: data.role,
 			level: data.level,
-			userId: data.id
+			userId: data.id,
+			classesRemaining: data.classesRemaining,
 		};
 	}
 });

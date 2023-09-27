@@ -50,7 +50,6 @@
 
 		<dialog id="my_modal_1" class="modal modal-bottom sm:modal-middle">
 			<form method="dialog" class="modal-box">
-				<SuperDebug data={$form} />
 				<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 				<span class="text-xl uppercase tracking-widest text-yellow-300 text-center">Editar</span>
 
@@ -171,7 +170,7 @@
 							<span class="uppercase tracking-widest text-yellow-300 text-left text-sm"
 								>Clases disponibles:
 							</span>
-							<p>6</p>
+							<p>{data?.user?.classesRemaining}</p>
 						</li>
 						<li class="flex items-center gap-2">
 							<span class="uppercase tracking-widest text-yellow-300 text-left text-sm"

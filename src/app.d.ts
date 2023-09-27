@@ -15,6 +15,7 @@ declare global {
 			userId: string;
 			plan: Plan;
 			level: string;
+			classesRemaining: int;
 		};
 		type DatabaseSessionAttributes = {};
 	}

@@ -17,6 +17,8 @@
 	const { form: formUpdate, enhance: enhanceUpdate, delayed: delayedUpdate } = superForm(data.UPDATE_USER_FORM, {
 		id: '2'
 	});
+
+	console.log(data)
 </script>
 
 <main class="mt-4 mb-20">
@@ -50,7 +52,7 @@
 				<span class="uppercase tracking-widest text-yellow-300 text-left text-sm"
 					>Clases disponibles:
 				</span>
-				<p>6</p>
+				<p>{data.user?.classesRemaining}</p>
 			</li>
 			<li class="flex items-center gap-2">
 				<span class="uppercase tracking-widest text-yellow-300 text-left text-sm">Su plan termina: </span>

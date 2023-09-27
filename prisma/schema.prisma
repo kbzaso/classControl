@@ -3,32 +3,34 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id           String    @id @unique @default(uuid())
-  createdAt    DateTime  @default(now())
-  first_name   String
-  last_name    String
-  email        String    @unique
-  role         Role      @default(USER)
-  plan         Plan?     
-  level        Level?    
-  auth_session Session[]
-  auth_key     Key[]
-  avatarUrl    String?
-  classes      Class[]
+  id               String    @id @unique @default(uuid())
+  createdAt        DateTime  @default(now())
+  first_name       String
+  last_name        String
+  email            String    @unique
+  role             Role      @default(USER)
+  plan             Plan?
+  level            Level?
+  auth_session     Session[]
+  auth_key         Key[]
+  avatarUrl        String?
+  classes          Class[]
+  payments         Payment[]
+  classesRemaining Int       @default(0)
 }
 
 model Class {
-  id           String    @id @unique @default(uuid())
-  createdAt    DateTime  @default(now())
+  id           String   @id @unique @default(uuid())
+  createdAt    DateTime @default(now())
   when         DateTime
   level        Level
-  max_students Int @default(12)
+  max_students Int      @default(12)
   assistants   User[]
 }
 
@@ -49,6 +51,17 @@ model Key {
   user            User    @relation(references: [id], fields: [user_id], onDelete: Cascade)
 
   @@index([user_id])
+}
+
+model Payment {
+  id           String   @id @unique @default(uuid())
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+  amount       Int
+  classesAdded Int
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  plan         Plan?
 }
 
 enum Role {

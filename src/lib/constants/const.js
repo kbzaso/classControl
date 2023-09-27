@@ -7,8 +7,7 @@ export const LEVEL = {
     BASIC: 'Básico',
     INTERMEDIATE: 'Intermedio',
     ADVANCED: 'Avanzado',
-    MASTER: 'Maestro/a'
-
+    MASTER: 'Profesor/a'
 }
 
 export const PLAN = {

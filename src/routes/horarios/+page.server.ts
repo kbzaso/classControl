@@ -1,4 +1,4 @@
-import { redirect, type Actions } from '@sveltejs/kit';
+import { redirect, type Actions, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import { client } from '$lib/server/lucia';
 import { z } from 'zod';
@@ -144,6 +144,15 @@ export const actions: Actions = {
 		
 		const formAssistToClass = await superValidate(formData, assistToClassSchema);
 
+		console.log(session.user.classesRemaining)
+
+		if (session.user.classesRemaining <= 0 && session.user.role !== 'ADMIN') {
+			return fail(400, {
+				formAssistToClass,
+				message: 'No tienes clases disponibles'
+			});
+		}
+
 		try {
 			await client.class.update({
 				where: {
@@ -154,6 +163,16 @@ export const actions: Actions = {
 						connect: {
 							id: session?.user?.userId
 						}
+					}
+				}
+			});
+			await client.user.update({
+				where: {
+					id: session?.user?.userId
+				},
+				data: {
+					classesRemaining: {
+						decrement: 1
 					}
 				}
 			});
@@ -181,6 +200,16 @@ export const actions: Actions = {
 						disconnect: {
 							id: session?.user?.userId
 						}
+					}
+				}
+			});
+			await client.user.update({
+				where: {
+					id: session?.user?.userId
+				},
+				data: {
+					classesRemaining: {
+						increment: 1
 					}
 				}
 			});

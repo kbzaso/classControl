@@ -21,6 +21,9 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	default: async ({ request, locals }) => {
 		const formData = await request.formData();
+
+		const form = await superValidate(formData, loginSchema);
+
 		const first_name = formData.get("first_name");
 		const last_name = formData.get("last_name");
 		const plan = formData.get("plan");
@@ -31,7 +34,7 @@ export const actions: Actions = {
 			await auth.createUser({
 				key: {
 					providerId: "username", // auth method
-					providerUserId: email.toLowerCase(), // unique id when using "username" auth method
+					providerUserId: email?.toLowerCase(), // unique id when using "username" auth method
 					password // hashed by Lucia
 				},
 				attributes: {
@@ -41,9 +44,13 @@ export const actions: Actions = {
 					plan
 				}
 			});
+			return {
+				success: true, message: 'new student', form
+			};
 		} catch (e) {
 			// this part depends on the database you're using
 			// check for unique constraint error in user table
+			console.log(e);
 			if (
 				e instanceof LuciaError
 			) {
@@ -52,7 +59,7 @@ export const actions: Actions = {
 				});
 			}
 			return fail(500, {
-				message: "Ocurrio un error inesperado"
+				message: "Ocurrio un error inesperado", form
 			});
 		}
 		// redirect to

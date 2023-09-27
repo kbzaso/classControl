@@ -12,13 +12,12 @@
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { classOpenId } from '$lib/stores.js';
 
-
 	const format = (date, locale, options) => {
 		return new Intl.DateTimeFormat(locale, options).format(date);
 	};
 
 	export let data: any;
-	export let userId: any;
+	export let user: any;
 	export let classId: any;
 
 	export let delayedDelete: any;
@@ -33,10 +32,10 @@
 	export let delayedEditClass: any;
 	export let enhanceEditClass: any;
 
-	$: userExists = data.assistants.some((assistant) => assistant.id == userId);
+	$: userExists = data.assistants.some((assistant) => assistant.id == user.userId);
 
 	onMount(() => {
-		$: userExists = data.assistants.some((assistant) => assistant.id == userId);
+		$: userExists = data.assistants.some((assistant) => assistant.id == user.userId);
 	});
 
 	$: firstThreeChars = data.id.substring(0, 3);
@@ -48,17 +47,17 @@
 	const dateWithOffset = new Date(date.getTime() - offset);
 	$: isoString = dateWithOffset.toISOString().slice(0, 16);
 
-	
-	$: isOpen = $classOpenId === classId ? true : false ;
+	$: isOpen = $classOpenId === classId ? true : false;
 
 	function toggle() {
-		if($classOpenId === classId) {
+		if ($classOpenId === classId) {
 			$classOpenId = '';
 		} else {
 			$classOpenId = classId;
 		}
 	}
-
+console.log(user.level, 'yo')
+console.log(data.level, 'clase')
 </script>
 
 <button
@@ -111,8 +110,11 @@
 							</div>
 						</div>
 						<p>{assistant.first_name} {assistant.last_name}</p>
+						{#if assistant.role === 'ADMIN'}
+							<Badge level={'MASTER'} size={'badge-sm'} />
+						{/if}
 					</figure>
-					{#if $page.data.user.role === 'ADMIN' && $page.data.userId !== assistant.id}
+					{#if user.role === 'ADMIN' && $page.data.userId !== assistant.id}
 						<a href={`/alumnos/${assistant.id}`} class="btn btn-outline btn-warning"
 							><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"
 								><path
@@ -127,31 +129,38 @@
 					{/if}
 				</li>
 			{/each}
-			{#if !userExists}
-				<form action="/horarios?/addUserToClass" method="POST" use:enhanceAssistToClass>
-					<input type="hidden" name="id" value={classId} />
-					<button class="btn btn-success w-full" type="submit">
-						{#if $delayedAssistToClass}
-							<span class="loading loading-spinner" />
-						{:else}
-							Asistir
-						{/if}
-					</button>
-				</form>
-			{:else}
-				<form action="/horarios?/deleteUserToClass" method="POST" use:enhanceNoAssistToClass>
-					<input type="hidden" name="id" value={classId} />
+			{#if user.level === data.level || user.role === 'ADMIN'}
+				{#if !userExists && user.classesRemaining > 0 && data.max_students >= data.assistants.length}
+					<form action="/horarios?/addUserToClass" method="POST" use:enhanceAssistToClass>
+						<input type="hidden" name="id" value={classId} />
+						<button class="btn btn-success w-full" type="submit">
+							{#if $delayedAssistToClass}
+								<span class="loading loading-spinner" />
+							{:else}
+								Asistir
+							{/if}
+						</button>
+					</form>
+				{:else if userExists}
+					<form action="/horarios?/deleteUserToClass" method="POST" use:enhanceNoAssistToClass>
+						<input type="hidden" name="id" value={classId} />
 
-					<button class="btn btn-error w-full" type="submit">
-						{#if $delayedNoAssistToClass}
-							<span class="loading loading-spinner" />
-						{:else}
-							No Asistir
-						{/if}
-					</button>
-				</form>
+						<button class="btn btn-error w-full" type="submit">
+							{#if $delayedNoAssistToClass}
+								<span class="loading loading-spinner" />
+							{:else}
+								No Asistir
+							{/if}
+						</button>
+					</form>
+				{/if}
 			{/if}
-			{#if $page.data.user.role === 'ADMIN'}
+
+				{#if user.classesRemaining <= 0 && !userExists && data.level === user.level}
+					<p class="text-center text-gray-600">No tienes clases disponibles</p>
+				{/if}
+
+			{#if user.role === 'ADMIN'}
 				<div class="border border-gray-800 p-4 rounded-xl bg-zinc-900 space-y-4">
 					<button class="btn btn-warning w-full" onclick={`my_modal_${firstThreeChars}.showModal()`}
 						>Editar</button

@@ -4,6 +4,8 @@
 	import type { PageData } from './$types';
 	import FormAlert from '$lib/components/FormAlert.svelte';
 	import { writable } from 'svelte/store';
+	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
+	import { page } from '$app/stores';
 
 	export let data: PageData;
 
@@ -17,7 +19,7 @@
 		id: '01'
 	});
 
-	const { delayed: delayedAssistToClass, enhance: enhanceAssistToClass } = superForm(
+	const { form: formAssistToClass ,delayed: delayedAssistToClass, enhance: enhanceAssistToClass } = superForm(
 		data.formAssistToClass,
 		{
 			id: '02'
@@ -44,7 +46,7 @@
 	const now = new Date().toISOString().slice(0, 16);
 
 
-	console.log(data)
+	console.log($page.data)
 
 	
 </script>
@@ -58,7 +60,7 @@
 		{#each data.classes as training, index}
 			<Collapse
 				data={training}
-				userId={data.userId}
+				user={data.user}
 				classId={training.id}
 				{delayedDelete}
 				{enhanceDelete}
@@ -86,6 +88,7 @@
 <!-- ADD CLASS -->
 <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
 	<form method="dialog" class="modal-box">
+		<SuperDebug data={$form} />
 		<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 		<form
 			method="POST"

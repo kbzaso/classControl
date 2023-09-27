@@ -6,6 +6,7 @@ import { LuciaError } from 'lucia';
 import { setError, superValidate } from 'sveltekit-superforms/server';
 import { z } from 'zod';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import type { Level } from '@prisma/client';
 
 const addUserSchema = z.object({
 	first_name: z.string().min(6),
@@ -13,9 +14,8 @@ const addUserSchema = z.object({
 	email: z.string().email(),
 	password: z.string().min(6).max(24),
 	plan: z.string().min(1),
-	level: z.string().min(1)
+	level: z.enum(["BASIC", "INTERMEDIATE", "ADVANCED", "MASTER"])
 });
-
 
 export const load: PageServerLoad = async ({ locals }) => {
 	const session = await locals.auth.validate();
@@ -77,12 +77,13 @@ export const actions: Actions = {
 					last_name,
 					email,
 					plan,
-					level
+					level: level as Level
 				}
 			});
 		} catch (e) {
 			// this part depends on the database you're using
 			// check for unique constraint error in user table
+			console.log(e);
 			if (
 				e instanceof PrismaClientKnownRequestError 
 			) {
