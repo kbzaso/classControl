@@ -47,9 +47,9 @@ export const load: PageServerLoad = async ({ params }) => {
 
 	const formAddPayment = await superValidate(user, paymentSchema, {
 		id: '3'
-		});
+	});
 
-	return { user, DELETE_USER_FORM, UPDATE_USER_FORM, formAddPayment, lastPayment};
+	return { user, DELETE_USER_FORM, UPDATE_USER_FORM, formAddPayment, lastPayment };
 };
 
 export const actions: Actions = {
@@ -62,23 +62,19 @@ export const actions: Actions = {
 
 		if (!deleteForm.valid) return fail(400, { deleteForm });
 
-		try {
-			await client.user.delete({
-				where: {
+		await client.user.delete({
+			where: {
+				id: String(id)
+			}
+		});
+		await client.payment.deleteMany({
+			where: {
+				user: {
 					id: String(id)
 				}
-			});
-			await client.payment.deleteMany({
-				where: {
-					user: {
-						id: String(id)
-					}
-				}
-			});
-			return {success: true, message: 'Usuario eliminado'};
-		} catch (error) {
-			console.log(error);
-		}
+			}
+		});
+		
 		throw redirect(302, '/alumnos');
 	},
 	update: async (event) => {
@@ -120,10 +116,10 @@ export const actions: Actions = {
 		const expire = new Date(date).toISOString();
 
 		let classToAdd = 0;
-		if(plan === PLAN.FOUR) classToAdd = 4;
-		if(plan === PLAN.EIGHT) classToAdd = 8;
-		if(plan === PLAN.TWELVE) classToAdd = 12;
-		if(plan === PLAN.SIXTEEN) classToAdd = 16;
+		if (plan === PLAN.FOUR) classToAdd = 4;
+		if (plan === PLAN.EIGHT) classToAdd = 8;
+		if (plan === PLAN.TWELVE) classToAdd = 12;
+		if (plan === PLAN.SIXTEEN) classToAdd = 16;
 
 		if (!formAddPayment.valid) return fail(400, { formAddPayment });
 
@@ -162,5 +158,5 @@ export const actions: Actions = {
 		} catch (error) {
 			return console.log(error);
 		}
-	},
+	}
 };
