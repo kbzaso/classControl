@@ -30,7 +30,7 @@ model Class {
   createdAt    DateTime @default(now())
   when         DateTime
   level        Level
-  max_students Int      @default(12)
+  max_students Int      @default(13)
   assistants   User[]
 }
 
@@ -58,7 +58,6 @@ model Payment {
   createdAt    DateTime @default(now())
   expiresAt    DateTime
   amount       Int
-  classesAdded Int
   user         User     @relation(fields: [userId], references: [id])
   userId       String
   plan         Plan?

@@ -9,6 +9,7 @@
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { PUBLIC_PROJECT_URL } from '$env/static/public';
 	import { PLAN } from '$lib/constants/const';
+	import { dateFormat } from '$lib/utils';
 
 	const { form, errors, enhance, delayed } = superForm(data.form);
 
@@ -20,8 +21,7 @@
 		resetForm: true
 	});
 
-	console.log(data)
-
+	console.log(data);
 </script>
 
 <main class="w-full mb-10">
@@ -164,7 +164,15 @@
 							<span class="uppercase tracking-widest text-yellow-300 text-left text-sm"
 								>Plan:
 							</span>
-							<p>{PLAN[data.user?.plan]}</p>
+							{#if PLAN[data?.user?.plan] === 'FOUR'}
+								<p>4 clases - $20.000</p>
+							{:else if PLAN[data?.user?.plan] === 'EIGHT'}
+								<p>8 clases - $30.000</p>
+							{:else if PLAN[data?.user?.plan] === 'TWELVE'}
+								<p>12 clases - $42.000</p>
+							{:else if PLAN[data?.user?.plan] === 'SIXTEEN'}
+								<p>16 clases - $52.000</p>
+							{/if}
 						</li>
 						<li class="flex items-center gap-2">
 							<span class="uppercase tracking-widest text-yellow-300 text-left text-sm"
@@ -176,7 +184,7 @@
 							<span class="uppercase tracking-widest text-yellow-300 text-left text-sm"
 								>Su plan termina:
 							</span>
-							<p>06/06/2023</p>
+							<p class="text-md">{dateFormat(data.lastPayment?.expiresAt, 'es-CL', { month: 'numeric', day: 'numeric', year: "numeric", })}</p>
 						</li>
 					{/if}
 				</ul>

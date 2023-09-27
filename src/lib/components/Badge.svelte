@@ -4,12 +4,12 @@
 	import { LEVEL } from '$lib/constants/const';
 </script>
 
-{#if level == 'BASIC'}
-	<div class={`badge badge-secondary ${size ? size : 'badge-sm'}`}>{LEVEL[level]}</div>
-{:else if level == 'INTERMEDIATE'}
-	<div class={`badge badge-accent ${size ? size : 'badge-sm'}`}>{LEVEL[level]}</div>
-{:else if level == 'ADVANCED'}
-	<div class={`badge badge-primary ${size ? size : 'badge-sm'}`}>{LEVEL[level]}</div>
-{:else if level == 'MASTER'}
-	<div class={`badge badge-outline  ${size ? size : 'badge-sm'}`}>{LEVEL[level]}</div>
+{#if level == LEVEL.BASIC}
+	<div class={`badge badge-secondary ${size ? size : 'badge-sm'}`}>Básico</div>
+{:else if level == LEVEL.INTERMEDIATE}
+	<div class={`badge badge-accent ${size ? size : 'badge-sm'}`}>Intermedio</div>
+{:else if level == LEVEL.ADVANCED}
+	<div class={`badge badge-primary ${size ? size : 'badge-sm'}`}>Avanzado</div>
+{:else if level == LEVEL.MASTER}
+	<div class={`badge badge-outline  ${size ? size : 'badge-sm'}`}>Profesor/a</div>
 {/if}

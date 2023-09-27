@@ -6,6 +6,7 @@
 	import { writable } from 'svelte/store';
 	import SuperDebug from 'sveltekit-superforms/client/SuperDebug.svelte';
 	import { page } from '$app/stores';
+	import { LEVEL } from '$lib/constants/const';
 
 	export let data: PageData;
 
@@ -19,12 +20,13 @@
 		id: '01'
 	});
 
-	const { form: formAssistToClass ,delayed: delayedAssistToClass, enhance: enhanceAssistToClass } = superForm(
-		data.formAssistToClass,
-		{
-			id: '02'
-		}
-	);
+	const {
+		form: formAssistToClass,
+		delayed: delayedAssistToClass,
+		enhance: enhanceAssistToClass
+	} = superForm(data.formAssistToClass, {
+		id: '02'
+	});
 
 	const { delayed: delayedNoAssistToClass, enhance: enhanceNoAssistToClass } = superForm(
 		data.formNoAssistToClass,
@@ -45,32 +47,61 @@
 
 	const now = new Date().toISOString().slice(0, 16);
 
+	console.log($page.data);
 
-	console.log($page.data)
+	interface User {
+		id: string;
+		name: string;
+		role: 'ADMIN' | 'USER';
+		level: 'BASIC' | 'INTERMEDIATE' | 'ADVANCED';
+	}
 
-	
+	interface Class {
+		id: string;
+		name: string;
+		level: 'BASIC' | 'INTERMEDIATE' | 'ADVANCED';
+	}
+
+	function canAccessClass(user: User, classObj: Class): boolean {
+		if (user.role === 'ADMIN') {
+			return true; // Admin users can access any class
+		} else if (user.level === LEVEL.ADVANCED) {
+			return true; // Advanced users can access any class
+		} else if (user.level === LEVEL.INTERMEDIATE && classObj.level !== LEVEL.ADVANCED) {
+			return true; // Intermediate users can access basic and intermediate classes
+		} else if (user.level === LEVEL.BASIC && classObj.level === LEVEL.BASIC) {
+			return true; // Basic users can only access basic classes
+		} else {
+			return false; // User cannot access class
+		}
+	}
+
+	console.log(data.user);
 </script>
 
 <main class="mb-20">
-	<span class="font-semibold">Bienvenido {data.user.first_name} </span>
+		<p class="font-semibold">Bienvenido {data.user.first_name} 👋</p>
+		<span class="text-xs">Clases disponibles: {data.user.classesRemaining}</span>
 	{#if data.classes.length === 0}
 		<p class="text-sm">Actualmente no hay clases agendadas 😔</p>
-	{:else}
+text-xs	{:else}
 		<h1 class="text-2xl font-semibold">Próximas clases</h1>
-		{#each data.classes as training, index}
-			<Collapse
-				data={training}
-				user={data.user}
-				classId={training.id}
-				{delayedDelete}
-				{enhanceDelete}
-				{delayedAssistToClass}
-				{enhanceAssistToClass}
-				{delayedNoAssistToClass}
-				{enhanceNoAssistToClass}
-				{delayedEditClass}
-				{enhanceEditClass}
-			/>
+		{#each data.classes as training}
+			{#if canAccessClass(data.user, training)}
+				<Collapse
+					data={training}
+					user={data.user}
+					classId={training.id}
+					{delayedDelete}
+					{enhanceDelete}
+					{delayedAssistToClass}
+					{enhanceAssistToClass}
+					{delayedNoAssistToClass}
+					{enhanceNoAssistToClass}
+					{delayedEditClass}
+					{enhanceEditClass}
+				/>
+			{/if}
 		{/each}
 	{/if}
 	{#if data.user.role === 'ADMIN'}

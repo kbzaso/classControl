@@ -4,15 +4,15 @@ export const ROLE = {
 }
 
 export const LEVEL = {
-    BASIC: 'Básico',
-    INTERMEDIATE: 'Intermedio',
-    ADVANCED: 'Avanzado',
-    MASTER: 'Profesor/a'
+    BASIC: 'BASIC',
+    INTERMEDIATE: 'INTERMEDIATE',
+    ADVANCED: 'ADVANCED',
+    MASTER: 'MASTER'
 }
 
 export const PLAN = {
-    FOUR: '4 clases al mes',
-    EIGHT: '8 clases al mes',
-    TWELVE: '12 clases al mes',
-    SIXTEEN: '16 clases al mes'
+    FOUR: 'FOUR',
+    EIGHT: 'EIGHT',
+    TWELVE: 'TWELVE',
+    SIXTEEN: 'SIXTEEN'
 }

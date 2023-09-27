@@ -56,8 +56,6 @@
 			$classOpenId = classId;
 		}
 	}
-console.log(user.level, 'yo')
-console.log(data.level, 'clase')
 </script>
 
 <button
@@ -110,9 +108,7 @@ console.log(data.level, 'clase')
 							</div>
 						</div>
 						<p>{assistant.first_name} {assistant.last_name}</p>
-						{#if assistant.role === 'ADMIN'}
-							<Badge level={'MASTER'} size={'badge-sm'} />
-						{/if}
+							<Badge level={assistant.level} size={'badge-sm'} />
 					</figure>
 					{#if user.role === 'ADMIN' && $page.data.userId !== assistant.id}
 						<a href={`/alumnos/${assistant.id}`} class="btn btn-outline btn-warning"
@@ -129,7 +125,6 @@ console.log(data.level, 'clase')
 					{/if}
 				</li>
 			{/each}
-			{#if user.level === data.level || user.role === 'ADMIN'}
 				{#if !userExists && user.classesRemaining > 0 && data.max_students >= data.assistants.length}
 					<form action="/horarios?/addUserToClass" method="POST" use:enhanceAssistToClass>
 						<input type="hidden" name="id" value={classId} />
@@ -154,7 +149,6 @@ console.log(data.level, 'clase')
 						</button>
 					</form>
 				{/if}
-			{/if}
 
 				{#if user.classesRemaining <= 0 && !userExists && data.level === user.level}
 					<p class="text-center text-gray-600">No tienes clases disponibles</p>
