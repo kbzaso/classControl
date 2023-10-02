@@ -30,6 +30,8 @@ export const actions: Actions = {
 		const email = formData.get("email");
 		const password = formData.get("password");
 
+		console.log(form);
+
 		try {
 			await auth.createUser({
 				key: {

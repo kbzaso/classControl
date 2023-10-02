@@ -69,6 +69,6 @@
 			{/if}
 		</button>
 	</form>
+	<a href="/signup" class="text-center mt-2 underline text-warning">Crea tu cuenta</a>
 </main>
 
-<!-- <a href="/signup">Create an account</a> -->

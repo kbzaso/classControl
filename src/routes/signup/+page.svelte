@@ -13,7 +13,6 @@
 	});
 </script>
 
-<h1>Sign up sin login</h1>
 <!-- <SuperDebug data={$form}/> -->
 <main class="self-center">
 	<form method="post" use:enhance class="mt-4 flex flex-col gap-4 border border-gray-800 p-4 rounded-xl">
@@ -68,8 +67,15 @@
 				bind:value={$form.password}
 			/></label
 		>
-		<button class="btn btn-primary" type="submit">Ingresar</button>
+
+		<button class="btn btn-primary" type="submit">
+			{#if $delayed}
+				<span class="loading loading-spinner" />
+			{:else}
+			Ingresar
+			{/if}
+		</button>
 	</form>
 
+	<a href="/" class="text-center mt-2 underline text-warning">Ingresar</a>
 </main>
-<a href="/">Sign in</a>
