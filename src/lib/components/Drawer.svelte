@@ -2,7 +2,7 @@
 	import { Drawer, Button, CloseButton, A } from 'flowbite-svelte';
 	import { sineIn } from 'svelte/easing';
 	import { hiddenDrawer } from '$lib/stores.js';
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 
 	export let role;
 
@@ -21,6 +21,7 @@
 			}
 		}).then((res) => {
 			if (res.ok) {
+				invalidateAll();
 				goto('/');
 			}
 			$hiddenDrawer = true;

@@ -47,8 +47,6 @@
 
 	const now = new Date().toISOString().slice(0, 16);
 
-	console.log($page.data);
-
 	interface User {
 		id: string;
 		name: string;
@@ -75,8 +73,6 @@
 			return false; // User cannot access class
 		}
 	}
-
-	console.log(data.user);
 </script>
 
 <main class="mb-20">
@@ -84,7 +80,7 @@
 		<span class="text-xs">Clases disponibles: {data.user.classesRemaining}</span>
 	{#if data.classes.length === 0}
 		<p class="text-sm">Actualmente no hay clases agendadas 😔</p>
-text-xs	{:else}
+	{:else}
 		<h1 class="text-2xl font-semibold">Próximas clases</h1>
 		{#each data.classes as training}
 			{#if canAccessClass(data.user, training)}

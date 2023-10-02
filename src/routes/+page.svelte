@@ -71,4 +71,4 @@
 	</form>
 </main>
 
-<a href="/signup">Create an account</a>
+<!-- <a href="/signup">Create an account</a> -->

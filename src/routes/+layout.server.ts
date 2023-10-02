@@ -17,6 +17,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		return {
 			user,
 			userId: session.user.userId,
+			session
 		};
 	}
 };

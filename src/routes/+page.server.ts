@@ -15,7 +15,7 @@ export const load = async ({ locals }) => {
 	const session = await locals.auth.validate();
 	if (session) throw redirect(302, '/horarios');
 	const form = superValidate(loginSchema);
-	return { form };
+	return { form, session };
 };
 
 export const actions: Actions = {

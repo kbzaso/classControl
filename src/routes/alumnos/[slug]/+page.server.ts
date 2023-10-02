@@ -62,19 +62,25 @@ export const actions: Actions = {
 
 		if (!deleteForm.valid) return fail(400, { deleteForm });
 
-		await client.user.delete({
-			where: {
-				id: String(id)
-			}
-		});
-		await client.payment.deleteMany({
-			where: {
-				user: {
+		console.log(id);
+
+		try {
+			await client.payment.deleteMany({
+				where: {
+					user: {
+						id: String(id)
+					}
+				}, 
+			});
+			await client.user.delete({
+				where: {
 					id: String(id)
 				}
-			}
-		});
-		
+			});
+			
+		} catch (error) {
+			console.log(error);
+		}
 		throw redirect(302, '/alumnos');
 	},
 	update: async (event) => {
