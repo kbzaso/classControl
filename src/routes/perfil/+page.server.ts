@@ -25,14 +25,25 @@ function generateRandomFilename(extension: string): string {
 	return `${timestamp}-${randomNumber}.${extension}`;
   }
 
-export const load: PageServerLoad = async ({ locals }) => {
-	const session = await locals.auth.validate();
+export const load: PageServerLoad = async ( event ) => {
+	const session = await event.locals.auth.validate();
 	if (!session) throw redirect(302, '/');
 
 	// bring my user info from the database
 	const user = await client.user.findUnique({
 		where: {
 			id: session?.user?.userId
+		}
+	});
+
+	const lastPayment = await client.payment.findFirst({
+		where: {
+			user: {
+				id: session.user.userId
+			}
+		},
+		orderBy: {
+			expiresAt: 'desc'
 		}
 	});
 
@@ -45,7 +56,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 		user,
 		userId: session.user.userId,
 		form,
-		formAvatar
+		formAvatar,
+		lastPayment
 	};
 };
 
