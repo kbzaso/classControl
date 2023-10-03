@@ -21,6 +21,8 @@
 		resetForm: true
 	});
 
+	console.log(data)
+
 </script>
 
 <main class="w-full mb-10">
